@@ -1,0 +1,52 @@
+<!doctype html>
+<title>Hello from Flask</title>
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% else %}
+  <h1>Hello World!</h1>
+{% endif %}
+<br>
+        {% if error %}
+        <h1>{{error}}</h1>
+        {% endif %}
+<br>
+        {% if password %}
+        <h1>{{password}}</h1>
+        {% endif %}
+<br>
+        <!--{% if tags %}-->
+        <!--<h1>tags are here</h1>-->
+        <!--{% endif %}-->
+        {% if tags %}
+            <h1>tags:{% for tag in tags %}{{tag[0]}}&nbsp;{% endfor %}</h1>
+        {% endif %}
+<br>
+        {% if title %}
+        <h1>title:{{title}}</h1>
+        {% endif %}
+<br>
+        {% if content %}
+        <h1>content:{{content}}</h1>
+        {% endif %}
+<br>
+        {% if tag %}
+        <h1>one tag:{{tag}}</h1>
+        {% endif %}
+<br>
+        {% if id %}
+        <h1>passage id:{{id}}</h1>
+        {% endif %}
+
+{% if comments %}
+        {% for comment in comments[1] %}
+        {{comment[1]}}&nbsp;&nbsp;{{comment[3]}}<br>
+        {{comment[2]}}<br>
+            {% for talk in comment[4] %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{talk[1]}}&nbsp;&nbsp;回复&nbsp;&nbsp;{{talk[2]}}&nbsp;&nbsp;{{talk[4]}}:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{talk[3]}}<br>
+            {% endfor %}
+        {% endfor %}
+{% endif %}
+{% if test %}
+        <h1>{{test}}</h1>
+{% endif %}

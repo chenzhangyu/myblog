@@ -1,0 +1,129 @@
+{% extends "/public/left.html" %}
+
+{% block css %}
+        <link href="../../static/css/blog.css" rel="stylesheet">
+{% endblock css %}
+
+
+{% block passage %}
+    {% if error %}
+    <h2>暂无文章</h2>
+    {% else %}
+        <h2 class="text-center">{% if passage %}
+            {{passage.title}}
+            {% else %}
+            something is wrong
+            {% endif %}
+        </h2><br>
+        <p class="text-right">&nbsp;<span class="glyphicon glyphicon-tag"></span>&nbsp;label:
+        {% for tag in tags %}
+        {{tag.tag}}&nbsp;
+        {% endfor %}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        最后修改时间:{{passage.pubdate}}
+        </p><br>
+        <pre><p>{{passage.content}}</p></pre>
+        <hr>
+        <legend><h3><p>留下你的足迹</p></h3></legend>
+        {% if session['eca6bf4563175e50b160924fd99d75fa'] %}
+        <div class="row" id="comment-button">
+            <div class="col-md-3">
+                <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#myComment">我要评论</button>
+            </div>
+        </div>
+        <!----------------------------------------------评论的表单--------------------------------------------------------------->
+        <div class="modal fade" id="myComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">写评论</h4>
+              </div>
+              <div class="modal-body">
+                <form action="{{url_for('comment', passageid=comments[0])}}" method="POST" role="form">
+                    <div class="form-group">
+                        <textarea rows="8" class="form-control" name="comment_content"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">submit</button>
+                        <button type="reset" class="btn btn-primary">reset</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!----------------------------------------------------end--------------------------------------------------------->
+            {% if comments[1] %}
+                <div class="comments">
+                {% for comment in comments[1] %}
+                <div class="comment">
+                <span class="text-primary">{{comment[2]}}</span>&nbsp;&nbsp;&nbsp;&nbsp;{{comment[4]}}&nbsp;&nbsp;:<br>
+                <span class="replies">{{comment[3]}}</span>&nbsp;&nbsp;&nbsp;<span data-toggle="modal" data-target="#myReply" class="replyComment glyphicon glyphicon-comment"></span>&nbsp;
+                    <input type="hidden" value="/reply/{{comment[0]}}/0"><br>
+
+                        {% for talk in comment[5] %}
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-primary">{{talk[1]}}</span>&nbsp;&nbsp;回复&nbsp;&nbsp;
+                        <span class="text-primary"> {{talk[2]}}</span>&nbsp;&nbsp;&nbsp;&nbsp;{{talk[4]}}&nbsp;&nbsp;:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{talk[3]}}&nbsp;&nbsp;&nbsp;<span data-toggle="modal" data-target="#myReply" class="replyComment glyphicon glyphicon-comment"></span>&nbsp;
+                        <input type="hidden" value="/reply/{{comment[0]}}/{{talk[0]}}">
+                        <br>
+                        {% endfor %}
+
+                </div>
+                {% endfor %}
+                </div>
+                <!-----------------------------------------回复的表单----------------------------------------------->
+                <div class="modal fade" id="myReply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">回复</h4>
+                      </div>
+                      <div class="modal-body">
+                        <form id="reply-form" action="" method="POST" role="form">
+                            <div class="form-group">
+                                <textarea rows="8" class="form-control" name="reply_content"></textarea>
+                                <input type="hidden" name="passageid" value="{%if passage %}{{passage.id}}{%endif%}">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">submit</button>
+                                <button type="reset" class="btn btn-primary">reset</button>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--------------------------------------------------------------------------------------------------->
+            {% else %}
+            <h3>暂无评论</h3>
+            {% endif %}
+        {% else %}
+            <h2 class="text-primary">请先登录再评论</h2>
+            {% if comments[1] %}
+                <div class="comments">
+                {% for comment in comments[1] %}
+                <div class="comment">
+                <span class="text-primary">{{comment[2]}}</span>&nbsp;&nbsp;{{comment[4]}}:<br>
+                {{comment[3]}}&nbsp;&nbsp;&nbsp;<a href="{{url_for('login')}}"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;<br>
+                    {% for talk in comment[5] %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="text-primary">{{talk[1]}}</span>
+                    &nbsp;&nbsp;回复&nbsp;&nbsp;
+                    <span class="text-primary"> {{talk[2]}}</span>&nbsp;&nbsp;{{talk[4]}}:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{talk[3]}}&nbsp;&nbsp;&nbsp;<a href="{{url_for('login')}}"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;<br>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                </div>
+            {% else %}
+            <h3>暂无评论</h3>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+{% block script %}
+<script src="../../static/js/blog.js"></script>
+{% endblock %}

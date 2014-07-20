@@ -1,0 +1,10 @@
+div#comments{
+    line-height: 2em;
+    padding: 30px;
+    background-color: #E2E4E4;
+    margin-bottom: 30px;
+    font-size: 1.3em;
+}
+div.comment{
+    padding-bottom: 30px;
+}
