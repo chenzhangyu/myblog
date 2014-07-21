@@ -1,11 +1,7 @@
 <!doctype html>
+<html>
 <title>Hello from Flask</title>
-{% if name %}
-  <h1>Hello {{ name }}!</h1>
-{% else %}
-  <h1>Hello World!</h1>
-{% endif %}
-<br>
+<body>
         {% if error %}
         <h1>{{error}}</h1>
         {% endif %}
@@ -50,3 +46,5 @@
 {% if test %}
         <h1>{{test}}</h1>
 {% endif %}
+</body>
+</html>
