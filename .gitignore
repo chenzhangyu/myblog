@@ -3,4 +3,5 @@
 venv/
 blog/*.pyc
 blog/.idea/
+blog/log
 gunicorn_conf.py
