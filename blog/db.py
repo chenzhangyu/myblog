@@ -41,6 +41,7 @@ class Comments(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     content = db.Column(db.String(500))
     pubdate = db.Column(db.String(30))
+    display = db.Column(db.Integer)
     talks = db.relation('Talks', backref='talks', lazy='dynamic', passive_deletes=True)
 
 
@@ -51,3 +52,4 @@ class Talks(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     content = db.Column(db.String(200))
     pubdate = db.Column(db.String(30))
+    display = db.Column(db.Integer)

@@ -324,6 +324,7 @@ def blog(passageid=None):
         comment.append(usernameofcomment)
         comment.append(x.content)
         comment.append(x.pubdate)
+        comment.append(x.display)
         talks = []
         for n in x.talks:
             talk = []
@@ -336,6 +337,7 @@ def blog(passageid=None):
             talk.append(username)
             talk.append(n.content)
             talk.append(n.pubdate)
+            talk.append(n.display)
             talks.append(talk)
         comment.append(talks)
         comments.append(comment)
@@ -460,7 +462,8 @@ def comment(passageid):
     a = Comments(passage_id=passageid,
                  user_id=session['userid'],
                  content=request.form['comment_content'],
-                 pubdate=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                 pubdate=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                 display=1)
     db.session.add(a)
     db.session.commit()
     return redirect(url_for('blog', passageid=passageid))
@@ -475,7 +478,8 @@ def reply(comment_id, originer_id):
               originer_id=int(originer_id),
               user_id=session['userid'],
               content=request.form['reply_content'],
-              pubdate=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+              pubdate=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+              display=1)
     db.session.add(a)
     db.session.commit()
     if 'return' in request.form:
@@ -501,6 +505,7 @@ def checkreply(passageid):
             comment.append(usernameofcomment)
             comment.append(x.content)
             comment.append(x.pubdate)
+            comment.append(x.display)
             talks = []
             for n in x.talks:
                 talk = []
@@ -514,6 +519,7 @@ def checkreply(passageid):
                 talk.append(username)
                 talk.append(n.content)
                 talk.append(n.pubdate)
+                talk.append(n.display)
                 talks.append(talk)
             comment.append(talks)
             comments.append(comment)
@@ -537,7 +543,7 @@ def deletereply(id, flag, passageid):
             a = Comments.query.get(int(id))
         else:
             a = Talks.query.get(int(id))
-        a.content = u'delete'
+        a.display = 0
         db.session.commit()
         return redirect(url_for('checkreply', passageid=passageid))
     else:

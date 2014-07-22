@@ -17,3 +17,8 @@ div#comment-button{
     padding-top: 20px;
     padding-bottom: 15px;
 }
+.delete{
+    font-size: 0.9em;
+    color: grey;
+    font-style: italic;
+}

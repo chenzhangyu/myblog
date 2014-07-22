@@ -1,5 +1,5 @@
 {% extends "/public/left.html" %}
-
+{% block title %}Blog {% endblock %}
 {% block css %}
         <link href="../../static/css/blog.css" rel="stylesheet">
 {% endblock css %}
@@ -59,13 +59,15 @@
                 {% for comment in comments[1] %}
                 <div class="comment">
                 <span class="text-primary">{{comment[2]}}</span>&nbsp;&nbsp;&nbsp;&nbsp;{{comment[4]}}&nbsp;&nbsp;:<br>
-                <span class="replies">{{comment[3]}}</span>&nbsp;&nbsp;&nbsp;<span data-toggle="modal" data-target="#myReply" class="replyComment glyphicon glyphicon-comment"></span>&nbsp;
+                <span class="replies">{% if comment[5] %}{{comment[3]}}{%else%}<span class="delete">被和谐</span>{%endif%}
+                </span>&nbsp;&nbsp;&nbsp;<span data-toggle="modal" data-target="#myReply" class="replyComment glyphicon glyphicon-comment"></span>&nbsp;
                     <input type="hidden" value="/reply/{{comment[0]}}/0"><br>
 
-                        {% for talk in comment[5] %}
+                        {% for talk in comment[6] %}
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-primary">{{talk[1]}}</span>&nbsp;&nbsp;回复&nbsp;&nbsp;
                         <span class="text-primary"> {{talk[2]}}</span>&nbsp;&nbsp;&nbsp;&nbsp;{{talk[4]}}&nbsp;&nbsp;:<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{talk[3]}}&nbsp;&nbsp;&nbsp;<span data-toggle="modal" data-target="#myReply" class="replyComment glyphicon glyphicon-comment"></span>&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{%if    talk[5] %}{{talk[3]}}{%else%}<span class="delete">被和谐</span>{%endif%}
+                    &nbsp;&nbsp;&nbsp;<span data-toggle="modal" data-target="#myReply" class="replyComment glyphicon glyphicon-comment"></span>&nbsp;
                         <input type="hidden" value="/reply/{{comment[0]}}/{{talk[0]}}">
                         <br>
                         {% endfor %}
@@ -107,13 +109,15 @@
                 {% for comment in comments[1] %}
                 <div class="comment">
                 <span class="text-primary">{{comment[2]}}</span>&nbsp;&nbsp;{{comment[4]}}:<br>
-                {{comment[3]}}&nbsp;&nbsp;&nbsp;<a href="{{url_for('login')}}"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;<br>
-                    {% for talk in comment[5] %}
+                {% if comment[5] %}{{comment[3]}}{%else%}<span class="delete">被和谐</span>{%endif%}
+                    &nbsp;&nbsp;&nbsp;<a href="{{url_for('login')}}"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;<br>
+                    {% for talk in comment[6] %}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span class="text-primary">{{talk[1]}}</span>
                     &nbsp;&nbsp;回复&nbsp;&nbsp;
                     <span class="text-primary"> {{talk[2]}}</span>&nbsp;&nbsp;{{talk[4]}}:<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{talk[3]}}&nbsp;&nbsp;&nbsp;<a href="{{url_for('login')}}"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{%if talk[5] %}{{talk[3]}}{%else%}<span class="delete">被和谐</span>{%endif%}&nbsp;&nbsp;&nbsp;
+                    <a href="{{url_for('login')}}"><span class="glyphicon glyphicon-comment"></span></a>&nbsp;<br>
                     {% endfor %}
                 </div>
                 {% endfor %}

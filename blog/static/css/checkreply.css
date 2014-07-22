@@ -8,3 +8,8 @@ div#comments{
 div.comment{
     padding-bottom: 30px;
 }
+.delete{
+    font-size: 0.9em;
+    color: grey;
+    font-style: italic;
+}

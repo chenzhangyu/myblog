@@ -39,15 +39,16 @@
                     {% for comment in comments[1] %}
                     <div class="comment">
                         <span class="text-primary">{{comment[2]}}</span>&nbsp;&nbsp;评论&nbsp;&nbsp;<span class="text-success">{{comment[4]}}</span><br>
-                        <span class="replies">{{comment[3]}}</span>&nbsp;&nbsp;
+                        {% if comment[5] %}{{comment[3]}}{%else%}<span class="delete">被和谐</span>{%endif%}&nbsp;&nbsp;
                         <span data-target="#myReply" data-toggle="modal" class="text-info replyComment glyphicon glyphicon-comment"></span>&nbsp;&nbsp;
                         <input type="hidden" value="/reply/{{comment[0]}}/0">
                         <a  href="{{url_for('deletereply', id=comment[0], flag='comment', passageid=comments[0])}}"><span class="glyphicon glyphicon-trash"></span></a><br>
-                        {% for reply in comment[5] %}
+                        {% for reply in comment[6] %}
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <span class="text-primary">{{reply[2]}}</span>&nbsp;&nbsp;<span class="text-success">{{reply[5]}}</span><br>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@<span class="text-primary">{{reply[3]}}</span><br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="replies">{{reply[4]}}</span>&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {%if reply[6]%}{{reply[4]}}{%else%}<span class="delete">被和谐</span>{%endif%}&nbsp;&nbsp;
                             <span data-toggle="modal" data-target="#myReply" class="text-info replyComment glyphicon glyphicon-comment"></span>&nbsp;&nbsp;
                             <input type="hidden" value="/reply/{{comment[0]}}/{{reply[1]}}">
                             <a href="{{url_for('deletereply', id=reply[0], flag='reply', passageid=comments[0])}}"><span class="glyphicon glyphicon-trash"></span></a>&nbsp;<br>
