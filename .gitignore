@@ -1,3 +1,4 @@
+# 1st edition
 *.pyc
 .idea/
 venv/
@@ -5,3 +6,10 @@ blog/*.pyc
 blog/.idea/
 blog/log
 gunicorn_conf.py
+
+# 2nd edition
+blog/admin/*.pyc
+blog/index/*.pyc
+.*.swp
+blog/.*.swp
+blog/*/.*.swp
