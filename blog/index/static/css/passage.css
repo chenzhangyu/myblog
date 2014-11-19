@@ -1,0 +1,100 @@
+a.noul:hover{
+	text-decoration: none;
+}
+#passage{
+	margin-bottom: 2em;
+}
+#waitting{
+	text-align: center;
+	padding-top: 3em;
+	padding-bottom: 3em;
+}
+#passage-item{
+	background-color: #fff;
+	padding: 1.5em 2em 1.5em 2em;
+}
+.tag{
+	margin-left: 1em;
+}
+.tag-list{
+	float: right;
+}
+.passage-link{
+	margin: 3em 1em 1em 1em;
+}
+a.next{
+	float: right;
+}
+.box-head{
+	background-color: #f5f5f5;
+	padding: 10px 15px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+.box-body{
+
+}
+#comment-box{
+	margin-top: 5em;
+}
+.comment-input{
+	width: 100%;
+	padding: 10px 15px;
+	border: 0px;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	resize: none;
+}
+#commet-btn{
+	float: right;
+	width: 10%;
+}
+.comment-list{
+	margin: 3em 1em 4em 1em;
+}
+.comment-content{
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+.comment-time{
+	margin-right: 2em;
+}
+span.action:hover{
+	cursor: pointer;
+	opacity: 0.5;
+}
+.reply{
+	margin-right: 1em;
+}
+.vote-up{
+	margin-right: 1em;
+}
+.report{
+	margin-right: 1em;
+}
+.comment-item-reply{
+	padding-left: 3em;
+}
+.sort-option{
+	padding-left: 1em;
+	padding-right: 1em;
+}
+span.sort-option:hover{
+	cursor: pointer;
+	opacity: 0.5;
+	color: red;
+}
+button#comment{
+	margin-right: 1em;
+}
+.profile-image{
+	width: 50px;
+	float: left;
+	margin: 0.4em 0.9em;
+}
+.profile-image img{
+	border-radius: 3px;
+}
+.comment-session{
+	display: inline-block;
+}

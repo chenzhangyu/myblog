@@ -1,0 +1,87 @@
+{%extends "index/layout/index.html"%}
+{%block indexHeadScript%}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/categories.css')}}">
+{%endblock indexHeadScript%}
+{%block rightPart%}
+<div class="passage-list">
+	<div class="passage">
+		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
+		<span class="detail text-right">
+			<div>
+				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
+			</div>
+			<div>
+				<i class="fa fa-tags"></i>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+			</div>
+		</span>
+	</div>
+
+	<div class="passage">
+		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
+		<span class="detail text-right">
+			<div>
+				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
+			</div>
+			<div>
+				<i class="fa fa-tags"></i>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+			</div>
+		</span>
+	</div>
+
+	<div class="passage">
+		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
+		<span class="detail text-right">
+			<div>
+				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
+			</div>
+			<div>
+				<i class="fa fa-tags"></i>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+			</div>
+		</span>
+	</div>
+
+	<div class="passage">
+		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
+		<span class="detail text-right">
+			<div>
+				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
+			</div>
+			<div>
+				<i class="fa fa-tags"></i>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+				<a href="#" class="tag-item">tag</a>
+			</div>
+		</span>
+	</div>
+
+</div>
+
+<div class="bottom-nav text-center">
+	
+	<nav>
+	  <ul class="pagination">
+	    <li class="disabled"><a href="#">&laquo;</a></li>
+	    <li class="active"><a href="#">1</a></li>
+		<li><a href="#">1</a></li>
+		<li><a href="#">1</a></li>
+		<li><a href="#">&raquo;</a></li>
+	  </ul>
+	</nav>
+
+</div>
+
+{%endblock rightPart%}

@@ -1,6 +1,16 @@
 from flask import Flask
+from blog.config import info
+from blog.index import index_module
+from blog.admin import admin_module
+from blog.db import app
 
-app = Flask(__name__)
+# infoSql = info['SQL']
+# app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = \
+#         infoSql['type'] + '://' + infoSql['user'] + ':' + \
+#         infoSql['password'] + '@localhost/' + infoSql['database']
 
-import blog.db
-import blog.views
+app.register_blueprint(index_module, url_prefix='/blog')
+app.register_blueprint(admin_module, url_prefix='/admin')
+
+#import blog.db

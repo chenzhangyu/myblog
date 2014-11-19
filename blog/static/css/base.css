@@ -1,0 +1,6 @@
+.top-nav{
+	width: 80%;
+}
+#user-login, #logout{
+	display: inline-block;
+}

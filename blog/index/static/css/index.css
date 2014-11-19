@@ -1,0 +1,26 @@
+.article{
+	background-color: #fff;
+	margin-top: 2em;
+	margin-bottom: 2em;
+}
+.article-item{
+	padding-left: 2em;
+	padding-right: 2em;
+}
+.pubdate{
+	padding-top: 2em;
+}
+.description{
+	padding-top: 1em;
+	padding-bottom: 2em;
+}
+.more{
+	color: #777;
+	margin-left: 2em;
+}
+.tag-list{
+	float: right;
+}
+.tag{
+	margin-right: 1em;
+}

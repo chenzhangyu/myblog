@@ -1,0 +1,27 @@
+body{
+	background-image: url("../../static/img/bg.png");
+}
+.left-col{
+	margin-top: 8em;
+}
+.right-col{
+	margin-top: 3em;
+}
+.head-png{
+	width: 140px;
+	height: 140px;
+}
+#personal-summary {
+	color: #777;
+	padding-top: 2em;
+}
+#social-link{
+	padding-top: 3em;
+}
+#friend-link{
+	padding-top: 1em;
+}
+.footer{
+	color: #777;
+	padding-bottom: 1em;	
+}

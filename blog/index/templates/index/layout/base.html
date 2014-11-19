@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="我手记我心, Zhangyu Chen的个人博客">
+	<meta name="keywords" content="web backends">
+	<title>{%block title%}Zhangyu Chen的个人博客{%endblock title%}</title>
+	<link href="../../static/lib/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{url_for('.static', filename='css/base.css')}}" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=2858452607&debug=true" type="text/javascript" charset="utf-8"></script> -->
+	<!-- <link rel="stylesheet" href="../../static/lib/font-awesome.min.css"> -->
+<!-- cdn -->
+<!-- 	<link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet"> -->
+{%block cssStyle%}{%endblock cssStyle%}
+
+</head>
+<body>
+
+	<nav class="navbar navbar-default" role="navigation">
+	  <div class="container-fluid top-nav">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="{{url_for('admin_module.index')}}">首页</a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li><a href="{{url_for('index_module.categories')}}">归档</a></li>
+	        <li><a href="#">关于</a></li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+			 <li>
+			{%if session['username'] and session['profile_url']%}
+			<a id='user-login' href="http://weibo.com/{{session['profile_url']}}">{{session['username']}}</a>
+			<a id="logout" href="{{url_for('index_module.logout')}}">logout</a>
+			{%else%}
+			<a href="{{url_for('index_module.login')}}">login</a>
+			{%endif%}
+			 </li>
+	        <!-- <li><a href="#"></a></li> -->
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2 col-xs-12 col-md-offset-1">
+				<div class="left-col text-center">
+					<img src="{{url_for('.static', filename='img/head.png')}}" alt="fail" class="img-circle head-png">
+					<p id="personal-summary">TBD personal-summary from database</p>
+					
+					<div id="friend-link">
+						<div class="panel panel-default">
+						  <div class="panel-heading">友情链接</div>
+						  <div class="panel-body">
+						    <ul>
+						    	<li><a href="#">a</a></li>
+						    	<li><a href="#">b</a></li>
+						    	<li><a href="#">c</a></li>
+						    	<li><a href="#">d</a></li>
+						    </ul>
+						  </div>
+						</div>
+
+					</div>
+					<div id="social-link">
+						<a class="text-muted" href="#" title="github"><i class="fa fa-github fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+						<a class="text-muted" href="#" title="rss"><i class="fa fa-rss-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+						<a class="text-muted" href="#" title="mail"><i class="fa fa-envelope fa-2x"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 col-xs-12">
+				<div class="right-col">{%block rightPart%}{%endblock rightPart%}</div>
+				<div class="footer">
+					<p class="text-right footer">powered by <a href="#">Zhangyu Chen</a> with <a href="http://getbootstrap.com/">Bootstrap</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script src="../../static/lib/dist/js/jquery-1.11.0.min.js"></script>
+<script src="../../static/lib/dist/js/bootstrap.min.js"></script>
+<!--<script>
+	WB2.anyWhere(function(W){
+    W.widget.connectButton({
+        id: "wb_connect_btn",	
+        type:"5,5",
+        callback : {
+            login:function(o){	//登录后的回调函数
+            },	
+            logout:function(){	//退出后的回调函数
+            }
+        }
+    });
+});
+</script>-->
+
+<!-- cdn -->
+<!-- <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script> -->
+<!-- <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> -->
+
+</html>

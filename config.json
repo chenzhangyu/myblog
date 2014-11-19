@@ -1,0 +1,17 @@
+{
+	"SQL": {
+		"type": "mysql",
+		"user": "root",
+		"password": "chenzhangyu",
+		"database": "test"
+	},
+	"email": {
+		"engine": "on",
+		"address": "zhangyuchen@hustunique.com"	
+	},
+	"SinaAPI":{
+		"APP_KEY": "2858452607",
+		"APP_SECRET": "307003f29a4ed1d6656ed81c01f2db9d",
+		"CALLBACK_URI": "http://127.0.0.1:5000/blog/response/login"
+	}
+}

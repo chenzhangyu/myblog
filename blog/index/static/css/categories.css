@@ -1,0 +1,23 @@
+.passage-list{
+	margin-bottom: 2em;
+}
+.passage{
+	padding: 2em 1em 2em 1em;
+	background-color: #fff;
+	border-bottom: solid 1px #F3EBEB;
+}
+a.passage-link{
+	text-decoration: none;
+	font-size: 2em;
+}
+.detail{
+	float: right;
+}
+.pubdate{
+	margin-left: 1em;
+}
+.tag-item{
+	margin-left: 1em;
+	text-decoration: none;
+	color: #777;
+}
