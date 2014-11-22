@@ -4,3 +4,6 @@
 #user-login, #logout{
 	display: inline-block;
 }
+.pointer{
+	cursor: pointer;
+}

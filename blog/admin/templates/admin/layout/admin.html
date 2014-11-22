@@ -3,13 +3,26 @@
 	<link href="{{url_for('.static', filename='css/base.css')}}" rel="stylesheet">
 	{%block adminHeadScript%}{%endblock adminHeadScript%}
 {%endblock headScript%}
+{%block container%}
 	<div class="container">
 		<div class="row">
 			<div class="col-md-2 col-xs-12 col-md-offset-1">
-asdfasdfasdf
+				<div class="left-col">
+					<div class="list-group link-group">
+					  <a href="{{url_for('.index')}}" class="list-group-item {{site['index']}}">
+					    基本信息{{asdf}}
+					  </a>
+					  <a href="{{url_for('.edit')}}" class="list-group-item {{site['edit']}}">写点东西</a>
+					  <a href="{{url_for('.config')}}" class="list-group-item {{site['config']}}">网站信息</a>
+					  <a href="{{url_for('.friend')}}" class="list-group-item {{site['friend']}}">友情链接</a>
+					</div>
+				</div>
 			</div>
 			<div class="col-md-8 col-xs-12">
-
+				<div class="right-col">
+					{%block rightCol%}{%endblock rightCol%}
+				</div>
 			</div>
 		</div>
 	</div>
+{%endblock container%}

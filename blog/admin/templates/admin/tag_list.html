@@ -1,0 +1,38 @@
+{%extends "admin/index.html"%}
+{%block adminIndexSection%}
+	<table class="table table-hover">
+	    <tbody>
+	        <tr>
+	            <td>title</td>
+	            <td>
+	            	<span class="glyphicon glyphicon-edit pointer" title="编辑"></span>
+	            	<span class="glyphicon glyphicon-trash pointer" title="放进回收站"></span>
+	            	<span class="glyphicon glyphicon-plus pointer" id="add-tag-btn" data-toggle="modal" data-target="#addTagModal" title="增加标签"></span>
+	            </td>
+	        </tr>
+	    </tbody>
+
+	</table>
+
+	<!-- Modal -->
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">增加标签</h4>
+      </div>
+      <div class="modal-body">
+        	<input type="text" class="form-control" id="tag-list-input" placeholder="多个标签之间用英文逗号分隔">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="tag-submit">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock adminIndexSection%}
+{%block footScript%}
+	<script src="{{url_for('.static', filename='js/tag-list.js')}}"></script>
+{%endblock footScript%}

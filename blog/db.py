@@ -32,29 +32,6 @@ class Users(db.Model):
         lazy='dynamic', passive_deletes=True)
     talk = db.relationship('Talks', backref='user', lazy='dynamic')
 
-# class Users(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(80), unique=True)
-#     email = db.Column(db.String(30), unique=True)
-#     password = db.Column(db.String(60))
-#     is_root = db.Column(db.Boolean, default=False)
-#     is_delete = db.Column(db.Boolean, default=False)
-#     is_sina = db.Column(db.Boolean, default=False)
-#     comment = db.relationship('Comments', backref='user',
-#         lazy='dynamic', passive_deletes=True)
-#     talk = db.relationship('Talks', backref='user', lazy='dynamic')
-#     sina = db.relationship('Sina', backref='user', uselist=False)
-
-
-# class Sina(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     uid = db.Column(db.String(30), unique=True)
-#     username = db.Column(db.String(80))
-#     profile_img = db.Column(db.String(80))
-#     profile_url = db.Column(db.String(100), unique=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    
-
 
 pas_tag = db.Table('pas_tag',
         db.Column('pas_id', db.Integer, 
@@ -69,7 +46,8 @@ class Passages(db.Model):
     title = db.Column(db.String(100), unique=True)
     content = db.Column(db.Text)
     pubdate = db.Column(db.DateTime)
-    visits = db.Column(db.Integer)
+    visits = db.Column(db.Integer, default=0)
+    description = db.Column(db.Text)
     is_draft = db.Column(db.Boolean, default=False)
     pas_tag = db.relationship("Tags", 
             secondary=pas_tag, 

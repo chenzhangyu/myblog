@@ -1,1 +1,36 @@
 {%extends "admin/layout/admin.html"%}
+{%block rightCol%}
+<ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" {{site['home']}}><a href="{{url_for('.index')}}">Home</a></li>
+  <li role="presentation" {{site['tags']}}><a href="{{url_for('.index_tags')}}">Tags</a></li>
+  <li role="presentation" {{site['dust']}}><a href="{{url_for('.index_dust')}}">Dust</a></li>
+</ul>
+<br>
+{%block adminIndexSection%}
+	<table class="table table-hover">
+	    <tbody>
+	        <tr>
+	            <td>title</td>
+	            <td><span class="glyphicon glyphicon-tags"></span>tag</td>
+	            <td>2014-10-10</td>
+	            <td>
+	            	<span class="glyphicon glyphicon-play" title="展示"></span>
+	            	<span class="glyphicon glyphicon-trash" title="放进回收站"></span>
+	            	<span class="glyphicon glyphicon-edit" title="编辑"></span>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td>title</td>
+	            <td><span class="glyphicon glyphicon-tags"></span>tag</td>
+	            <td>2014-10-10</td>
+	            <td>
+	            	<span class="glyphicon glyphicon-stop" title="暂停"></span>
+	            	<span class="glyphicon glyphicon-trash" title="放进回收站"></span>
+	            	<span class="glyphicon glyphicon-edit" title="编辑"></span>
+	            </td>
+	        </tr>
+	    </tbody>
+
+	</table>
+{%endblock adminIndexSection%}
+{%endblock rightCol%}
