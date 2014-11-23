@@ -16,7 +16,7 @@ $(document).ready(function(){
 		}).fail(failToCall);
 	});
 	$('.glyphicon-trash').click(function(){
-		var tag_name = 'asdf';
+		var tag_name = $(this).parent().prev().text();
 		$.ajax({
 			url: '/admin/del_tag',
 			dataType: 'json',
@@ -28,8 +28,8 @@ $(document).ready(function(){
 			console.log(data.status);
 		}).fail(function(){
 			alert('fail to operate');
-		})
-	})
+		});
+	});
 });
 
 function failToCall() {

@@ -109,5 +109,5 @@ def add_tag():
 @admin_module.route('/del_tag', methods=['POST'])
 @admin_session
 def del_tag():
-    print request.form['tag']
+    assert request.form['tag']
     return jsonify(status=True)

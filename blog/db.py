@@ -48,7 +48,7 @@ class Passages(db.Model):
     pubdate = db.Column(db.DateTime)
     visits = db.Column(db.Integer, default=0)
     description = db.Column(db.Text)
-    is_draft = db.Column(db.Boolean, default=False)
+    is_draft = db.Column(db.Boolean, default=True)
     pas_tag = db.relationship("Tags", 
             secondary=pas_tag, 
             backref=db.backref("passages", lazy="dynamic"), 
@@ -61,6 +61,10 @@ class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(50), unique=True)
     is_delete = db.Column(db.Boolean, default=False)
+    tag_pas = db.relationship("Passages", 
+            secondary=pas_tag, 
+            backref=db.backref("tags", lazy="dynamic"), 
+            passive_deletes=True)
 
 
 class Comments(db.Model):
