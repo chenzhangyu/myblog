@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session, abort, jsonify
-from ..database import Users, Passages, Tags
-from ..db import db
+from ..app import db
+from ..db.users import Users
+from ..db.passages import Passages
+from ..db.tags import Tags
 from ..weibo import get_client
-import functools
+import functools, time
 
 
 admin_module = Blueprint('admin_module', __name__,
@@ -42,15 +44,17 @@ def index_dust():
 def index_tags():
     site = {'index': 'active'}
     site['tags'] = 'class=active'
-    return render_template('admin/tag_list.html', site=site)
+    tag_list = Tags.get_all_tags()
+    return render_template('admin/tag_list.html', site=site, tags = tag_list)
 
 
 @admin_module.route('/edit')
 @admin_session
 def edit():
     site = {'edit': 'active'}
+    tagList = Tags.get_all_tags()
     if 'passage_id' not in request.args:
-        return render_template('admin/edit.html', site=site)
+        return render_template('admin/edit.html', site=site, tags=tagList)
 
 
 @admin_module.route('/config/')
@@ -78,7 +82,16 @@ def upload_passage():
         if need not in request.form or not request.form[need]:
             print 'illegal'
             abort(400)
-    p = Passages()
+    p = Passages(
+            title=request.form['title'],
+            content=request.form['content'],
+            description=request.form['description'],
+            pubdate=time.strftime("%Y-%m-%d %H:%M:%S")
+            )
+    p.set_tags(request.form.getlist('tags'))
+    db.session.add(p)
+    db.session.commit()
+    print request.form.getlist('tags')
     return redirect(url_for('.index'))
 
 
@@ -91,12 +104,13 @@ def add_tag():
         print '>>>self stop'
         abort(400)
     t_list = []
-    for item in [x for x in request.json['tagList'] \
-            if not Tags.is_registered(x)]:
-        print 'item ', item
-        t = Tags(tag=item)
-        db.session.add(t)
-        t_list.append(t)
+    for item in request.json['tagList']:
+        if Tags.is_registered(item):
+            Tags.reuse(item)
+        else:
+            t = Tags(tag=item)
+            db.session.add(t)
+            t_list.append(t)
     db.session.commit()
     result = [{'tid': x.id, 'tag': x.tag} for x in t_list]
     print result
@@ -110,4 +124,16 @@ def add_tag():
 @admin_session
 def del_tag():
     assert request.form['tag']
+    Tags.del_tag(request.form['tag'])
+    db.session.commit()
     return jsonify(status=True)
+
+@admin_module.route('/update_tag', methods=['POST'])
+@admin_session
+def update_tag():
+    assert request.form['origin']
+    if Tags.update_tag(request.form['origin'], request.form['newTag']):
+        db.session.commit()
+        return jsonify(status=True)
+    else:
+        return jsonify(status=False)

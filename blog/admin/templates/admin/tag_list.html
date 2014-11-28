@@ -1,15 +1,20 @@
 {%extends "admin/index.html"%}
 {%block adminIndexSection%}
+<button class="btn btn-success"id="add-tag-btn" data-toggle="modal" data-target="#addTagModal">增加标签</button>
 	<table class="table table-hover">
 	    <tbody>
-	        <tr>
-	            <td>title</td>
+          {%for tag in tags%}
+	        <tr>  
+	            <td>
+                  <span class="tag">{{tag.tag}}</span>
+                  <span class="badge">{{tag.count}}</span>
+              </td>
 	            <td>
 	            	<span class="glyphicon glyphicon-edit pointer" title="编辑"></span>
 	            	<span class="glyphicon glyphicon-trash pointer" title="放进回收站"></span>
-	            	<span class="glyphicon glyphicon-plus pointer" id="add-tag-btn" data-toggle="modal" data-target="#addTagModal" title="增加标签"></span>
 	            </td>
 	        </tr>
+          {%endfor%} 
 	    </tbody>
 
 	</table>
@@ -28,6 +33,24 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
         <button type="button" class="btn btn-primary" id="tag-submit">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateTagModal" tabindex="-1" role="dialog" aria-labelledby="myModalUpdate" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalUpdate">修改标签</h4>
+      </div>
+      <div class="modal-body">
+          <input type="text" class="form-control" id="tag-input">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="tag-update-submit">提交</button>
       </div>
     </div>
   </div>

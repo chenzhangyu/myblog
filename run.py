@@ -1,4 +1,4 @@
-from blog import app
+from blog.app import app
 
 _mode = 'debug'
 

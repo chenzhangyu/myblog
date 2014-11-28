@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session
 from datetime import timedelta
-from ..database import Users
-from ..db import db
+from ..app import db
+from ..db.users import Users
 from ..weibo import get_client
 import functools
 
