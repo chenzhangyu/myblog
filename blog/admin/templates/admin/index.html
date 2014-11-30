@@ -9,28 +9,32 @@
 {%block adminIndexSection%}
 	<table class="table table-hover">
 	    <tbody>
+	    	{%for passage in passage_list | default([])%}
 	        <tr>
-	            <td>title</td>
-	            <td><span class="glyphicon glyphicon-tags"></span>tag</td>
-	            <td>2014-10-10</td>
-	            <td>
-	            	<span class="glyphicon glyphicon-play" title="展示"></span>
-	            	<span class="glyphicon glyphicon-trash" title="放进回收站"></span>
-	            	<span class="glyphicon glyphicon-edit" title="编辑"></span>
+	            <td>{{passage.title}}</td>
+	            <td><span class="glyphicon glyphicon-tags"></span>
+					{%for tag in passage.tags | default([])%}
+					<span class="tag">{{tag.tag}}</span>
+					{%endfor%}
+	            </td>
+	            <td>{{passage.pubdate}}</td>
+	            <td class="op">
+	            	<input type="hidden" value="{{passage.id}}">
+	            	{%if passage.is_draft%}
+	            	<span class="glyphicon glyphicon-play pointer" title="展示"></span>
+	            	{%else%}
+	            	<span class="glyphicon glyphicon-stop pointer" title="暂停"></span>
+	            	{%endif%}
+	            	<span class="glyphicon glyphicon-trash pointer" title="放进回收站"></span>
+	            	<span class="glyphicon glyphicon-edit pointer" title="编辑"></span>
 	            </td>
 	        </tr>
-	        <tr>
-	            <td>title</td>
-	            <td><span class="glyphicon glyphicon-tags"></span>tag</td>
-	            <td>2014-10-10</td>
-	            <td>
-	            	<span class="glyphicon glyphicon-stop" title="暂停"></span>
-	            	<span class="glyphicon glyphicon-trash" title="放进回收站"></span>
-	            	<span class="glyphicon glyphicon-edit" title="编辑"></span>
-	            </td>
-	        </tr>
+	        {%endfor%}
 	    </tbody>
 
 	</table>
 {%endblock adminIndexSection%}
 {%endblock rightCol%}
+{%block footScript%}
+	<script src="{{url_for('.static', filename='js/index.js')}}"></script>
+{%endblock footScript%}

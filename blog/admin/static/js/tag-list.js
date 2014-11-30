@@ -1,4 +1,9 @@
 $(document).ready(function(){
+	$('#add-tag-btn').click(function(){
+		$('#tag-list-input').parent().removeClass('has-error');
+		$('#msg').text('');
+		$('#addTagModal').modal('show');
+	});
 	$('#tag-submit').click(function(){
 		$.ajax({
 			url: '/admin/add_tag',
@@ -58,8 +63,9 @@ $(document).ready(function(){
 	});
 });
 
-function failToCall() {
+function failToCall () {
 	if($('#tag-list-input').parent().hasClass('has-error') === false){
 		$('#tag-list-input').parent().addClass('has-error');
 	}
+	$('#msg').text('网络错误或该标签已存在!');
 }

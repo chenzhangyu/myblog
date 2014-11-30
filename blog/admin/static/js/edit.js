@@ -1,4 +1,9 @@
 $(document).ready(function(){
+	$('#add-tag-btn').click(function(){
+		$('#tag-list-input').parent().removeClass('has-error');
+		$('#msg').text('');
+		$('#addTagModal').modal('show');
+	});
 	$('#tag-submit').click(function(){
 		$.ajax({
 			url: '/admin/add_tag',
@@ -14,8 +19,9 @@ $(document).ready(function(){
 					$(input).attr({
 						'type': 'checkbox', 
 						'name': 'tags', 
-						'value': data.result[x].tag
-					}).prop('checked', true);
+						'value': data.result[x].tag,
+						'checked': 'checked'
+					});
 					$(label).addClass('checkbox-inline').append(input).html($(label).html()+data.result[x].tag);
 					console.log(label);
 					$('#tag-list').append(label);
@@ -32,4 +38,5 @@ function failToCall () {
 	if($('#tag-list-input').parent().hasClass('has-error') === false){
 		$('#tag-list-input').parent().addClass('has-error');
 	}
+	$('#msg').text('网络错误或该标签已存在!');
 }

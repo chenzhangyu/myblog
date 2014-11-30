@@ -1,4 +1,4 @@
-from db import db
+from . import db
 
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)

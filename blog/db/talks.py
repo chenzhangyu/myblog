@@ -1,4 +1,4 @@
-from ..app import db
+from . import db
 
 class Talks(db.Model):
     id = db.Column(db.Integer, primary_key=True)

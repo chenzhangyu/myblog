@@ -1,9 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session, abort, jsonify
-from ..app import db
-from ..db.users import Users
-from ..db.passages import Passages
-from ..db.tags import Tags
+from ..db import db, Users, Passages, Tags
 from ..weibo import get_client
 import functools, time
 
@@ -28,7 +25,29 @@ def admin_session(func):
 def index():
     site = {'index': 'active'}
     site['home'] = 'class=active'
-    return render_template('admin/index.html', site=site)
+    passages = Passages.get_all_passages_exc_deleted()
+    passages.reverse()
+    return render_template('admin/index.html', site=site, passage_list=passages)
+
+
+@admin_module.route('/display_passage', methods=['POST'])
+@admin_session
+def display_passage():
+    if 'pid' not in request.form or not request.form['pid']:
+        abort(400)
+    status = True if Passages.display(request.form['pid']) else False
+    db.session.commit()
+    return jsonify(status=status)
+
+
+@admin_module.route('/rollback_passage', methods=['POST'])
+@admin_session
+def rollback_passage():
+    if 'pid' not in request.form or not request.form['pid']:
+        abort(400)
+    status = True if Passages.rollback(request.form['pid']) else False
+    db.session.commit()
+    return jsonify(status=status)
 
 
 @admin_module.route('/dust')
@@ -36,7 +55,10 @@ def index():
 def index_dust():
     site = {'index': 'active'}
     site['dust'] = 'class=active'
-    return render_template('admin/dust_passage.html', site=site)
+    passages = Passages.get_all_passages_deleted()
+    passages.reverse()
+    return render_template('admin/dust_passage.html', site=site,
+                           dust_passages=passages)
    
 
 @admin_module.route('/tags')
@@ -53,8 +75,20 @@ def index_tags():
 def edit():
     site = {'edit': 'active'}
     tagList = Tags.get_all_tags()
-    if 'passage_id' not in request.args:
+    if 'pid' not in request.args:
         return render_template('admin/edit.html', site=site, tags=tagList)
+    passage = Passages.get_passage_by_id(request.args.get('pid'))
+    if not passage:
+        abort(404)
+    for t in tagList:
+        if t['tag'] in [x.tag for x in passage.tags]:
+            t['checked'] = True
+        else:
+            t['checked'] = False
+    return render_template('admin/edit.html',
+                           site=site,
+                           tags=tagList,
+                           passage=passage)
 
 
 @admin_module.route('/config/')
@@ -95,6 +129,20 @@ def upload_passage():
     return redirect(url_for('.index'))
 
 
+@admin_module.route('/update_passage', methods=['POST'])
+@admin_session
+def update_passage():
+    p = Passages.get_passage_by_id(request.form['pid'])
+    p.update_tags(request.form.getlist('tags'))
+    p.update_passage(
+            title=request.form['title'],
+            content=request.form['content'],
+            description=request.form['description']
+            )
+    db.session.commit()
+    return redirect(url_for('.index'))
+
+
 @admin_module.route('/add_tag', methods=['POST'])
 @admin_session
 def add_tag():
@@ -105,8 +153,8 @@ def add_tag():
         abort(400)
     t_list = []
     for item in request.json['tagList']:
-        if Tags.is_registered(item):
-            Tags.reuse(item)
+        if Tags.is_avaliable(item):
+            pass
         else:
             t = Tags(tag=item)
             db.session.add(t)
@@ -118,6 +166,30 @@ def add_tag():
         return jsonify(status=True, result=result)
     else:
         return jsonify(status=False)
+
+
+@admin_module.route('/del_passage', methods=['POST'])
+@admin_session
+def del_passage():
+    if 'pid' not in request.form or\
+            not Passages.get_passage_by_id(request.form['pid']):
+        abort(400)
+    p = Passages.get_passage_by_id(request.form['pid'])
+    p.del_passage()
+    db.session.commit()
+    return jsonify(status=True)
+
+
+@admin_module.route('/recycle_passage', methods=['POST'])
+@admin_session
+def recycle_passage():
+    if 'pid' not in request.form or\
+            not Passages.get_passage_by_id(request.form['pid']):
+        abort(400)
+    p = Passages.get_passage_by_id(request.form['pid'])
+    p.recycle_passage()
+    db.session.commit()
+    return jsonify(status=True)
 
 
 @admin_module.route('/del_tag', methods=['POST'])

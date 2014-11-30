@@ -1,4 +1,4 @@
-from ..app import db
+from . import db
 
 pas_tag = db.Table('pas_tag',
         db.Column('pas_id', db.Integer, 

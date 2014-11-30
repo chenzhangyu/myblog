@@ -1,6 +1,6 @@
 {%extends "admin/index.html"%}
 {%block adminIndexSection%}
-<button class="btn btn-success"id="add-tag-btn" data-toggle="modal" data-target="#addTagModal">增加标签</button>
+<button class="btn btn-success"id="add-tag-btn">增加标签</button>
 	<table class="table table-hover">
 	    <tbody>
           {%for tag in tags%}
@@ -29,6 +29,7 @@
       </div>
       <div class="modal-body">
         	<input type="text" class="form-control" id="tag-list-input" placeholder="多个标签之间用英文逗号分隔">
+          <p class="text-danger" id="msg"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -47,6 +48,7 @@
       </div>
       <div class="modal-body">
           <input type="text" class="form-control" id="tag-input">
+          <p class="text-danger" id="msg"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

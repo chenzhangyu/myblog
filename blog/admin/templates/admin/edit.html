@@ -3,26 +3,37 @@
 	<link href="{{url_for('.static', filename='css/edit.css')}}" rel="stylesheet">
 {%endblock headScript%}
 {%block rightCol%}
-<form action="{{url_for('.upload_passage')}}" method="POST" role="form">
+<form action="{{url_for('.update_passage') if passage else url_for('.upload_passage')}}" method="POST" role="form">
 	<div class="form-group">
-		<input type="text" class="form-control" name="title" placeholder="标题" required autofocus>
+		<input type="text" class="form-control" name="title" placeholder="标题" required autofocus value="{{passage.title if passage else ''}}">
 	</div>
 	<span class="form-group" id="tag-list">
 		<span style="margin-right:5px"><strong>标签</strong></span>
+		{%if passage%}
 		{%for tag in tags%}
 		<label class="checkbox-inline">
-			<input type="checkbox" name="tags" value="{{tag.tag}}" {{tag.checked}}> {{tag.tag}}
+			<input type="checkbox" name="tags" value="{{tag.tag}}" {{'checked' if tag.checked}}> {{tag.tag}}
 		</label>
 		{%endfor%}
+		{%else%}
+		{%for tag in tags%}
+		<label class="checkbox-inline">
+			<input type="checkbox" name="tags" value="{{tag.tag}}"> {{tag.tag}}
+		</label>
+		{%endfor%}
+		{%endif%}
 	</span>
-		<button type="button" class="btn btn-primary btn-sm" id="add-tag-btn" data-toggle="modal" data-target="#addTagModal">增加</button>
+		<button type="button" class="btn btn-primary btn-sm" id="add-tag-btn">增加</button>
 	
 	<div class="form-group">
-		<textarea class="form-control" rows="3" name="description" placeholder="请给个简单的介绍吧~" required></textarea>
+		<textarea class="form-control" rows="3" name="description" placeholder="请给个简单的介绍吧~" required>{{passage['description'] if passage else ''}}</textarea>
 	</div>
 	<div class="form-group">
-		<textarea class="form-control" rows="30" name="content" placeholder="正文" required></textarea>
+		<textarea class="form-control" rows="30" name="content" placeholder="正文" required>{{passage['content'] if passage else ''}}</textarea>
 	</div>
+	{%if passage is defined%}
+		<input type="hidden" name="pid" value="{{passage.id}}">
+	{%endif%}
 	<div class="text-right">
 		<a href="{{url_for('.index')}}" role="button" class="btn btn-warning">取消</a>
 		<button type="submit" class="btn btn-success">保存</button>
@@ -40,6 +51,7 @@
       </div>
       <div class="modal-body">
         	<input type="text" class="form-control" id="tag-list-input" placeholder="多个标签之间用英文逗号分隔">
+        	<p class="text-danger" id="msg"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

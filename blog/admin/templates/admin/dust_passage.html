@@ -2,14 +2,21 @@
 {%block adminIndexSection%}
 	<table class="table table-hover">
 	    <tbody>
-	        <tr>
-	            <td>title</td>
-	            <td><span class="glyphicon glyphicon-tags"></span>tag</td>
-	            <td>2014-10-10</td>
-	            <td>
-	            	<span class="glyphicon glyphicon-share-alt" title="恢复"></span>
+	    	{%for passage in dust_passages | default([])%}
+	    	<tr>
+	    		<td>{{passage.title}}</td>
+	            <td><span class="glyphicon glyphicon-tags"></span>
+					{%for tag in passage.tags | default([])%}
+					<span class="tag">{{tag.tag}}</span>
+					{%endfor%}
 	            </td>
-	        </tr>
+	            <td>{{passage.pubdate}}</td>
+	            <td>
+	            	<input type="hidden" value="{{passage.id}}">
+	            	<span class="glyphicon glyphicon-share-alt pointer" title="恢复"></span>
+	            </td>
+	    	</tr>
+	    	{%endfor%}
 	    </tbody>
 
 	</table>
