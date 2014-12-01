@@ -10,3 +10,5 @@ from .passages import Passages
 from .comments import Comments
 from .talks import Talks
 from .votes import Votes
+from .details import Details
+from .friends import Friends

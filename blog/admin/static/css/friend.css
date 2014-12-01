@@ -1,0 +1,36 @@
+.card{
+	width: 15em;
+	margin: 8px 16px 16px 8px;
+	padding: 20px 10px;
+	float: left;
+	border-radius: 3px;
+	box-shadow: 5px 5px #AAA6A6;
+	background-color: #7F2C86;
+}
+.link{
+	display: block;
+	margin-bottom: 1em;
+}
+#add-box{
+	width: 15em;
+	margin: 8px 16px 16px 8px;
+	float: left;
+	border-radius: 3px;
+	background-color: #ACA4A4;
+	box-shadow: 5px 5px #A8A6A6;
+}
+#add-box span{
+	display: block;
+	font-size: 5em;
+	margin: 0;
+	text-align: center;
+	padding-top: 0.46em;
+	padding-bottom: 0.46em;
+}
+#add-box:hover{
+	cursor: pointer;
+	background-color: #777;
+}
+#friend-input{
+	margin-bottom: 1em;
+}

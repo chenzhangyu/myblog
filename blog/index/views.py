@@ -1,13 +1,16 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session
 from datetime import timedelta
-from ..db import db, Users
+from ..db import db, Users, Details
 from ..weibo import get_client
 import functools
 
 
 def _get_referer():
     return session['Referer'] if 'Referer' in session else url_for('.index')
+
+def _get_config():
+    return Details.get_info()
 
 
 index_module = Blueprint('index_module', __name__,
@@ -17,16 +20,16 @@ index_module = Blueprint('index_module', __name__,
 @index_module.route('/')
 @index_module.route('/index/')
 def index():
-    return render_template('index/index.html')
+    return render_template('index/index.html', config=_get_config())
 
 @index_module.route('/categories/')
 def categories():
-    return render_template('index/categories.html')
+    return render_template('index/categories.html', config=_get_config())
 
 
 @index_module.route('/passage/')
 def passage():
-    return render_template('index/passage.html')
+    return render_template('index/passage.html', config=_get_config())
 
 
 @index_module.route('/login/')

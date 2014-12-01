@@ -1,1 +1,45 @@
 {%extends "admin/layout/admin.html"%}
+{%block headScript%}
+	{{super()}}
+	<link href="{{url_for('.static', filename='css/friend.css')}}" rel="stylesheet">
+{%endblock headScript%}
+{%block rightCol%}
+<div id="card-box">
+	{%for friend in friends%}
+	<div class="card">
+		<p class="friend" fid="{{friend.id}}">{{friend.description}}</p>
+		<a href="{{friend.link}}" class="link" title="{{friend.link}}">{{friend.link | truncate(16, True)}}</a>
+		<div class="text-right btn-box">
+			<button class="btn btn-sm btn-danger del-friend">删除</button>
+			<button class="btn btn-sm btn-success edit-friend">编辑</button>
+		</div>
+	</div>
+	{%endfor%}
+	<div id="add-box">
+		<span class="glyphicon glyphicon-plus"></span>
+	</div>
+</div>
+
+<div class="modal fade" id="operation" tabindex="-1" role="dialog" aria-labelledby="op-name" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="op-name"></h4>
+      </div>
+      <div class="modal-body">
+          <input type="text" class="form-control" id="friend-input" placeholder="名片">
+          <input type="text" class="form-control" id="link-input" placeholder="链接">
+          <p class="text-danger" id="msg"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="submit-btn" toggle="add">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock rightCol%}
+{%block footScript%}
+	<script src="{{url_for('.static', filename='js/friend.js')}}"></script>
+{%endblock footScript%}

@@ -4,7 +4,14 @@
 #user-login, #logout{
 	display: inline-block;
 }
-.pointer{
+.pointer, .text-link{
 	cursor: pointer;
 	opacity: 0.7;
+}
+.text-link{
+	color: #285CE4;
+}
+.text-link:hover{
+	opacity: 0.6;
+	text-decoration: none;
 }

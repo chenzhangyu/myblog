@@ -5,11 +5,6 @@
 	    	{%for passage in dust_passages | default([])%}
 	    	<tr>
 	    		<td>{{passage.title}}</td>
-	            <td><span class="glyphicon glyphicon-tags"></span>
-					{%for tag in passage.tags | default([])%}
-					<span class="tag">{{tag.tag}}</span>
-					{%endfor%}
-	            </td>
 	            <td>{{passage.pubdate}}</td>
 	            <td>
 	            	<input type="hidden" value="{{passage.id}}">

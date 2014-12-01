@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="我手记我心, Zhangyu Chen的个人博客">
-	<meta name="keywords" content="web backends">
-	<title>{%block title%}Zhangyu Chen的个人博客{%endblock title%}</title>
+	<meta name="description" content="{{config['summary'] | d('我手记我心, Zhangyu Chen的个人博客')}}">
+	<meta name="keywords" content="{{config['keyword'] | d('web backend')}}">
+	<title>{{config['title'] | d('Zhangyu Chen的个人博客')}}</title>
 	<link href="../../static/lib/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="../../static/css/base.css">
 

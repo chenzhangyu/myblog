@@ -1,5 +1,6 @@
 from . import db
 from . import pas_tag
+from time import strptime
 
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,3 +58,12 @@ class Tags(db.Model):
             if tag.is_delete == False:
                 result.append({'tag': tag.tag, 'count': tag.passages.count()})
         return result
+
+    @classmethod
+    def get_passages_by_tag(cls, tag):
+        assert cls.is_avaliable(tag)
+        t = cls.get_avaliable_tag(tag)
+        return [p1 for p1 in sorted(t.passages.all(), \
+                                      key=lambda x: x.pubdate, \
+                                      reverse=True) \
+                  if not p1.is_delete]

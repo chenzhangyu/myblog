@@ -1,1 +1,61 @@
 {%extends "admin/layout/admin.html"%}
+{%block headScript%}
+	{{super()}}
+	<link href="{{url_for('.static', filename='css/config.css')}}" rel="stylesheet">
+{%endblock headScript%}
+{%block rightCol%}
+<div id="main-control">
+	<div id="show">
+		<div class="row item">
+			<div class="col-md-2">
+				<div class="text-right"><strong>title</strong></div>
+			</div>
+			<div class="col-md-10">{{info['title']}}</div>
+		</div>
+		<div class="row item">
+			<div class="col-md-2">
+				<div class="text-right"><strong>keywords</strong></div>
+			</div>
+			<div class="col-md-10">{{info['keywords']}}</div>
+		</div>
+		<div class="row item">
+			<div class="col-md-2">
+				<div class="text-right"><strong>summary</strong></div>
+			</div>
+			<div class="col-md-10">{{info['summary']}}</div>
+		</div>
+		<div class="row item">
+			<div class="col-md-2">
+				<div class="text-right"><strong>description</strong></div>
+			</div>
+			<div class="col-md-10"><p>{{info['description']}}</p></div>
+		</div>
+		<div class="text-right">
+			<button class="btn btn-success" id="edit-btn">编辑</button>
+		</div>
+	</div>
+	<div id="edit">
+		<form action="{{url_for('.update_config')}}" method="POST" role="form">
+			<div class="form-group">
+				<input type="text" class="form-control" name="title" title="网站标题" value="{{info['title']}}" required autofocus>
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" name="keywords" title="关键字" value="{{info['keywords']}}" required>
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" name="summary" title="一句话" value="{{info['summary']}}" required>
+			</div>
+			<div class="form-group">
+				<textarea class="form-control" name="description" rows="15" title="网站标题" required>{{info['description']}}</textarea>
+			</div>
+			<div class="text-right">
+				<a href="" role="button" class="btn btn-warning">取消</a>
+				<button type="submit" class="btn btn-success">保存</button>
+			</div>
+		</form>
+	</div>
+</div>
+{%endblock rightCol%}
+{%block footScript%}
+	<script src="{{url_for('.static', filename='js/config.js')}}"></script>
+{%endblock footScript%}

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session, abort, jsonify
-from ..db import db, Users, Passages, Tags
+from ..db import db, Users, Passages, Tags, Details, Friends
 from ..weibo import get_client
 import functools, time
 
@@ -19,14 +19,21 @@ def admin_session(func):
 
 
 @admin_module.route('/')
-@admin_module.route('/index/')
-@admin_module.route('/home/')
+@admin_module.route('/index')
+@admin_module.route('/home')
 @admin_session
 def index():
     site = {'index': 'active'}
     site['home'] = 'class=active'
-    passages = Passages.get_all_passages_exc_deleted()
-    passages.reverse()
+    if 'tag' not in request.args:
+        passages = Passages.get_all_passages_exc_deleted()
+        passages.reverse()
+    elif Tags.is_avaliable(request.args.get('tag')):
+        print request.args.get('tag')
+        passages = Tags.get_passages_by_tag(request.args.get('tag')) 
+    else:
+        print 'not found'
+        abort(404)
     return render_template('admin/index.html', site=site, passage_list=passages)
 
 
@@ -95,14 +102,16 @@ def edit():
 @admin_session
 def config():
     site = {'config': 'active'}
-    return render_template('admin/config.html', site=site)
+    config = Details.get_info()
+    return render_template('admin/config.html', site=site, info=config)
 
 
 @admin_module.route('/friend/')
 @admin_session
 def friend():
     site = {'friend': 'active'}
-    return render_template('admin/friend.html', site=site)
+    friends = Friends.get_all_friends_exc_deleted()
+    return render_template('admin/friend.html', site=site, friends=friends)
 
 
 @admin_module.route('/upload_passage', methods=['POST'])
@@ -209,3 +218,59 @@ def update_tag():
         return jsonify(status=True)
     else:
         return jsonify(status=False)
+
+
+@admin_module.route('/update_config', methods=['POST'])
+@admin_session
+def update_config():
+    _info = ['title', 'summary', 'keywords', 'description']
+    for x in _info:
+        if x not in request.form or not request.form[x]:
+            abort(400)
+    if Details.is_default():
+        d = Details(title=request.form['title'],
+                    keywords=request.form['keywords'],
+                    summary=request.form['summary'],
+                    description=request.form['description'])
+        db.session.add(d)
+    else:
+        Details.update_info(title=request.form['title'],
+                        keywords=request.form['keywords'],
+                        summary=request.form['summary'],
+                        description=request.form['description'])
+    db.session.commit()
+    return redirect(url_for('.config'))
+
+
+@admin_module.route('/add_friend', methods=['POST'])
+@admin_session
+def add_friend():
+    _info = ['friend', 'link']
+    for x in _info:
+        if x not in request.form or not request.form[x]:
+            abort(400)
+    if Friends.is_registered_by_name(request.form['friend']):
+        return jsonify(status=False)
+    f = Friends(link=request.form['link'],
+                description=request.form['friend'])
+    db.session.add(f)
+    db.session.commit()
+    return jsonify(status=True)
+
+
+@admin_module.route('/update_friend', methods=['POST'])
+@admin_session
+def update_friend():
+    _info = ['friend', 'link', 'fid']
+    for x in _info:
+        if x not in request.form or not request.form[x]:
+            abort(400)
+        else:
+            print x, request.form[x]
+    if not Friends.is_registered_by_id(request.form['fid']):
+        return jsonify(status=False)
+    Friends.update_friend(fid=request.form['fid'], 
+                          friend=request.form['friend'],
+                          link=request.form['link'])
+    db.session.commit()
+    return jsonify(status=True)

@@ -6,7 +6,11 @@
           {%for tag in tags%}
 	        <tr>  
 	            <td>
+                  {%if tag.count%}
+                  <a href="{{url_for('.index') + '?tag=' + tag.tag}}" class="text-link">{{tag.tag}}</a>
+                  {%else%}
                   <span class="tag">{{tag.tag}}</span>
+                  {%endif%}
                   <span class="badge">{{tag.count}}</span>
               </td>
 	            <td>

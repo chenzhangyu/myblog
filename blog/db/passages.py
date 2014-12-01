@@ -1,3 +1,4 @@
+import time
 from . import db
 from . import Tags
 from . import pas_tag
@@ -34,6 +35,8 @@ class Passages(db.Model):
 
     def del_passage(self):
         self._set_status_deleted(status=True)
+        for t in self.tags:
+            self.tags.remove(t)
         return 
 
     def recycle_passage(self):
@@ -44,12 +47,13 @@ class Passages(db.Model):
         self.title = title
         self.content = content
         self.description = description
+        self.pubdate = time.strftime("%Y-%m-%d %H:%M:%S")
         return
 
 
     @classmethod
-    def _is_avaliable(cls, id):
-        return True if cls.query.get(id) else False
+    def _is_avaliable(cls, pid):
+        return True if cls.query.get(pid) else False
 
     @classmethod
     def _set_status(cls, id, status):

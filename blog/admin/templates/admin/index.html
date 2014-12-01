@@ -11,10 +11,10 @@
 	    <tbody>
 	    	{%for passage in passage_list | default([])%}
 	        <tr>
-	            <td>{{passage.title}}</td>
+	            <td><a class="text-link">{{passage.title}}</a></td>
 	            <td><span class="glyphicon glyphicon-tags"></span>
 					{%for tag in passage.tags | default([])%}
-					<span class="tag">{{tag.tag}}</span>
+					<a class="text-link" href="{{url_for('.index')+'?tag='+tag.tag}}">{{tag.tag}}</a>
 					{%endfor%}
 	            </td>
 	            <td>{{passage.pubdate}}</td>
