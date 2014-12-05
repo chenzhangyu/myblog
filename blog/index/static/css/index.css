@@ -24,3 +24,16 @@
 .tag{
 	margin-right: 1em;
 }
+.bottom-nav{
+	margin-bottom: 3em;
+}
+.pager{
+	width: 80%;
+	margin: auto;
+}
+#previous{
+	float: left;
+}
+#next{
+	float: right;
+}

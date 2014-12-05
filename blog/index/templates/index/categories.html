@@ -4,53 +4,22 @@
 {%endblock indexHeadScript%}
 {%block rightPart%}
 <div class="passage-list">
+	{%for passage in passages%}
 	<div class="passage">
-		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
+		<a href="{{url_for('.passage')}}?pid={{passage.id}}" class="passage-link">{{passage.title}}</a>
 		<span class="detail text-right">
 			<div>
-				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
+				<i class="fa fa-calendar"></i><span class="pubdate">{{passage.pubdate | string | truncate(10, True, end='')}}</span>
 			</div>
 			<div>
 				<i class="fa fa-tags"></i>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
+				{%for tag in passage.tags%}
+				<a href="{{url_for('.categories', kind=tag.tag)}}" class="tag-item">{{tag.tag}}</a>
+				{%endfor%}
 			</div>
 		</span>
-	</div>
-
-	<div class="passage">
-		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
-		<span class="detail text-right">
-			<div>
-				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
-			</div>
-			<div>
-				<i class="fa fa-tags"></i>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-			</div>
-		</span>
-	</div>
-
-	<div class="passage">
-		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
-		<span class="detail text-right">
-			<div>
-				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
-			</div>
-			<div>
-				<i class="fa fa-tags"></i>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-			</div>
-		</span>
-	</div>
+	</div>	
+	{%endfor%}
 
 	<div class="passage">
 		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
@@ -70,18 +39,26 @@
 
 </div>
 
+{%macro render_pagination(pagination, endpoint)%}
 <div class="bottom-nav text-center">
-	
 	<nav>
-	  <ul class="pagination">
-	    <li class="disabled"><a href="#">&laquo;</a></li>
-	    <li class="active"><a href="#">1</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">&raquo;</a></li>
-	  </ul>
+		<ul class="pagination">
+			{%- for page in pagination.iter_pages() %}
+				{%if page%}
+					{%if page != pagination.page%}
+						<li><a href="{{url_for(endpoint, page=page)}}">{{page}}</a></li>
+					{%else%}
+						<li class="active"><a href="#">{{page}}</a></li>
+					{%endif%}
+				{%else%}
+					<li><span class="ellipsis">...</span></li>
+				{%endif%}
+			{%- endfor%}
+		</ul>
 	</nav>
-
 </div>
-
+{%endmacro%}
+{%if pagination%}
+	{{render_pagination(pagination, '.archive')}}
+{%endif%}
 {%endblock rightPart%}

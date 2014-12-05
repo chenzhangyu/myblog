@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session, abort, jsonify
 from ..db import db, Users, Passages, Tags, Details, Friends
 from ..weibo import get_client
-import functools, time
+import functools
+import time
 
 
 admin_module = Blueprint('admin_module', __name__,
@@ -30,7 +31,7 @@ def index():
         passages.reverse()
     elif Tags.is_avaliable(request.args.get('tag')):
         print request.args.get('tag')
-        passages = Tags.get_passages_by_tag(request.args.get('tag')) 
+        passages = Tags.get_passages_by_tag_exc_deleted(request.args.get('tag')) 
     else:
         print 'not found'
         abort(404)
@@ -129,7 +130,6 @@ def upload_passage():
             title=request.form['title'],
             content=request.form['content'],
             description=request.form['description'],
-            pubdate=time.strftime("%Y-%m-%d %H:%M:%S")
             )
     p.set_tags(request.form.getlist('tags'))
     db.session.add(p)
@@ -272,5 +272,16 @@ def update_friend():
     Friends.update_friend(fid=request.form['fid'], 
                           friend=request.form['friend'],
                           link=request.form['link'])
+    db.session.commit()
+    return jsonify(status=True)
+
+
+@admin_module.route('/del_friend', methods=['POST'])
+@admin_session
+def del_friend():
+    if 'fid' not in request.form or not request.form['fid'] \
+            or not Friends.is_registered_by_id(request.form['fid']):
+        abort(400)
+    Friends.del_friend(request.form['fid'])
     db.session.commit()
     return jsonify(status=True)

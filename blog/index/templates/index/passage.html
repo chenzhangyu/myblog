@@ -1,54 +1,103 @@
 {%extends "index/layout/index.html"%}
 {%block indexHeadScript%}
 <link rel="stylesheet" href="{{url_for('.static', filename='css/passage.css')}}">
+<link rel="stylesheet" href="/static/lib/highlight/styles/monokai_sublime.css">
 {%endblock indexHeadScript%}
 {%block rightPart%}
+
+{%macro render_username(user)%}
+{%if user.is_root%}
+<a href="{{url_for('index_module.about')}}" class="text-link">{{user.username}}</a>&nbsp;<span class="text-danger">(作者)</span>
+{%else%}
+<a href="{{user.profile_url}}" class="text-link">{{user.username}}</a>
+{%endif%}
+{%endmacro%}
+
+{%macro render_time(datetime)%}
+	{%if datetime.year == datetime.now().year%}
+		{%set fmt = '%m\u6708%d\u65e5'%}
+	{%else%}
+		{%set fmt = '%Y\u5e74%m\u6708%d\u65e5'%}
+	{%endif%}
+	<span class="render-time">{{datetime.strftime(fmt.encode('utf-8')).decode('utf-8')}}</span>
+{%endmacro%}
+
+{%macro render_votes(votes)%}
+	{%if votes%}<span class="votes">({{votes}})</span>{%endif%}
+{%endmacro%}
+
 <div id="passage">
-	<div id="passage-item">
-		<h1>Title</h1>
-		<span class="tag-list">
-			<i class="fa fa-tags"></i>
-			<span class="tag">tag</span>
-			<span class="tag">tag</span>
-			<span class="tag">tag</span>
-		</span>
-		<div id="passage-content">
-			<div id="waitting"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+	{%if passage%}
+		<div id="passage-item">
+			<h1>{{passage.title}}</h1>
+			<div class="tag-list">
+				<i class="fa fa-tags"></i>
+					{%for t in passage.tags%}
+						<a href="{{url_for('.categories', kind=t.tag)}}" class="tag">{{t.tag}}</a>
+					{%endfor%}
+			</div>
+			<div id="passage-content">
+				<div id="waitting"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+			</div>
+
+			<div>Zhangyu Chen@{{render_time(passage.pubdate)}}</div>
+
+			<div class="passage-link">
+				
+					<span id="previous">
+						{%if nav['prev']%}
+							上一篇&nbsp;<a href="{{url_for('.passage')}}?pid={{nav['prev'].id}}" class="noul">{{nav['prev'].title}}</a>
+						{%endif%}
+					</span>
+				
+					<span id="next">
+						{%if nav['next']%}
+							下一篇&nbsp;<a href="{{url_for('.passage')}}?pid={{nav['next'].id}}" class="noul">{{nav['next'].title}}</a>
+						{%endif%}
+					</span>
+			</div>
+
 		</div>
-
-		<div>Zhangyu Chen@<span class="passage-pubdate">2014-10-10</span></div>
-
-		<div class="passage-link">
-			<span><a href="#" class="noul previous">&larr; previous</a></span>
-			<span><a href="#" class="noul next">next &rarr;</a></span>
-		</div>
-
-	</div>
+	{%endif%}
 	<hr>
 	
 	<div class="comment-list">
-		<div class="sort text-right">
-			<span class="sort-option newest">最新</span>
-			<span class="sort-option popularity">最热</span>
-		</div>
-
-		<div class="comment-item">
-			<div class="row">
-				<div class="profile-image">
-					<img src="{{url_for('.static', filename='img/1.jpg')}}" alt="hhh">	
+		{%for comment in passage.comments%}
+			{%if not comment.is_delete%}
+				<div class="comment-item">
+					<div class="profile-image">
+						<img src="{{comment.user.profile_img}}">	
+					</div>
+					<div class="comment-session" cid="{{comment.id}}">
+						{{render_username(comment.user)}}
+						<div class="comment-content">{{comment.content}}</div>
+						<span class="comment-time">{{render_time(comment.pubdate)}}</span>
+						<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
+						<span class="action vote-up"><i class="fa fa-thumbs-o-up">&nbsp;点赞</i>{{render_votes(comment.vote_ups)}}</span>
+						<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>		
+					</div>
 				</div>
-				<div class="comment-session">
-					<span class="comment-person text-primary">Lisa</span>
-					<div class="comment-content">asl;dfjas;ldkja;lskda;lskdf;alskda;lskd</div>
-					<span class="comment-time">2014-10-10</span>
-					<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
-					<span class="action vote-up"><i class="fa fa-thumbs-o-up">&nbsp;点赞</i></span>
-					<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>		
-				</div>
-			</div>
-				
-		</div>
-		<hr>
+				<hr>
+				{%for talk in comment.talks%}
+					{%if not talk.is_delete%}
+						<div class="comment-item comment-item-reply">
+							<div class="profile-image">
+								<img src="{{talk.f_user.profile_img}}">	
+							</div>
+							<div class="comment-session" mode="talk" cid="{{talk.cid}}" tid="{{talk.id}}">
+								{{render_username(talk.f_user)}}&nbsp;回复&nbsp;{{render_username(talk.t_user)}}
+								<div class="comment-content">{{talk.content}}</div>
+								<span class="comment-time">{{render_time(talk.pubdate)}}</span>
+								<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
+								<span class="action vote-up"><i class="fa fa-thumbs-o-up">&nbsp;点赞</i>{{render_votes(talk.vote_ups)}}</span>
+								<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>	
+							</div>
+						</div>	
+						<hr>
+					{%endif%}
+				{%endfor%}
+			{%endif%}
+		{%endfor%}
 
 		<div class="comment-item comment-item-reply">
 			<div class="profile-image">
@@ -72,15 +121,39 @@
 	<div class="comment-box">
 		<div class="box-head"><i class="fa fa-pencil-square-o"></i></div>
 		<div class="box-body">
-			<textarea class="comment-input" rows="6"></textarea>
+			<textarea id="comment-input" rows="6"></textarea>
 		</div>
 		<div class="text-right">
 			<button class="btn btn-success" id="comment">发布评论</button>	
 		</div>
 	</div>
-	
 
 
 </div>
 
+<div class="modal fade" id="reply-dialog" tabindex="-1" role="dialog" aria-labelledby="reply-box" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="reply-box"></h4>
+      </div>
+      <div class="modal-body">
+      	  <textarea id="reply-input" rows="10" class="form-control"></textarea>
+          <p class="text-danger" id="msg"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="submit-btn">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {%endblock rightPart%}
+{%block footScript%}
+{{super()}}
+	<script src="/static/lib/marked.js"></script>
+	<script src="/static/lib/highlight/highlight.pack.js"></script>
+	<script src="{{url_for('.static', filename='js/passage.js')}}"></script>
+{%endblock%}

@@ -13,7 +13,27 @@ $(document).ready(function(){
 		$('#friend-input').val($(this).parent().prev().prev().text());
 		$('#link-input').val($(this).parent().prev().attr('href'));
 		$('#operation').modal('show');
-	})
+	});
+	$('.del-friend').click(function(){
+		var fid = $(this).parent().prev().prev().attr('fid');
+		var friend = $(this).parent().prev().prev().text();
+		if(window.confirm('确认删除?')){
+			$.ajax({
+				'url': '/admin/del_friend',
+				'type': 'post',
+				'datatype': 'json',
+				'data': {
+					fid: fid
+				}
+			}).done(function(data){
+				if (data.status === true) {
+					window.location.href = '';
+				}
+			}).fail(function(){
+				alert('fail to operate');
+			});
+		}
+	});
 	$('#submit-btn').click(function(){
 		if ($(this).attr('toggle') === 'add') {
 			var url = '/admin/add_friend';

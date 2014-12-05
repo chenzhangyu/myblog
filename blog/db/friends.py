@@ -6,6 +6,10 @@ class Friends(db.Model):
     description = db.Column(db.String(40))
     is_delete = db.Column(db.Boolean, default=False)
 
+    def __init__(self, link, description):
+        self.link = link
+        self.description = description
+
     @classmethod
     def is_registered_by_name(cls, friend):
         return True if cls.query.filter_by(description=friend,
@@ -25,4 +29,11 @@ class Friends(db.Model):
         f = cls.query.get(fid)
         f.description = friend
         f.link = link
+        return
+
+    @classmethod
+    def del_friend(cls, fid):
+        assert cls.is_registered_by_id(fid)
+        f = cls.query.get(fid)
+        f.is_delete = True
         return

@@ -1,6 +1,5 @@
 from . import db
 from . import pas_tag
-from time import strptime
 
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,6 +9,13 @@ class Tags(db.Model):
             secondary=pas_tag, 
             backref=db.backref("tags", lazy="dynamic"), 
             passive_deletes=True)
+    # tag_pas = db.relationship('Passages',
+    #                            secondary=pas_tag,
+    #                            backref='tags',
+    #                            lazy='dynamic')
+
+    def __init__(self, tag):
+        self.tag = tag
 
     @classmethod
     def get_avaliable_tag(cls, name):
@@ -60,10 +66,18 @@ class Tags(db.Model):
         return result
 
     @classmethod
-    def get_passages_by_tag(cls, tag):
+    def get_passages_by_tag_exc_deleted(cls, tag, kind='all'):
         assert cls.is_avaliable(tag)
         t = cls.get_avaliable_tag(tag)
-        return [p1 for p1 in sorted(t.passages.all(), \
-                                      key=lambda x: x.pubdate, \
-                                      reverse=True) \
-                  if not p1.is_delete]
+        # including drafts
+        if kind == 'all':
+            return [p1 for p1 in sorted(t.passages.all(), \
+                                          key=lambda x: x.pubdate, \
+                                          reverse=True) \
+                      if not p1.is_delete]
+        # only for show
+        else:
+            return [p for p in sorted(t.passages\
+                                      .filter_by(is_draft=False).all(),
+                                      key=lambda x: x.pubdate,
+                                      reverse=True)]

@@ -6,8 +6,8 @@
 	<meta name="description" content="{{config['summary'] | d('我手记我心, Zhangyu Chen的个人博客')}}">
 	<meta name="keywords" content="{{config['keyword'] | d('web backend')}}">
 	<title>{{config['title'] | d('Zhangyu Chen的个人博客')}}</title>
-	<link href="../../static/lib/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="../../static/css/base.css">
+	<link href="/static/lib/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/static/css/base.css">
 
 	<!-- <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=2858452607&debug=true" type="text/javascript" charset="utf-8"></script> -->
 	<!-- <link rel="stylesheet" href="../../static/lib/font-awesome.min.css"> -->
@@ -37,7 +37,7 @@
 	      	{%if 'root' in session%}
 	      	<li><a href="{{url_for('admin_module.index')}}">控制台</a></li>
 	      	{%endif%}
-	        <li><a href="{{url_for('index_module.categories')}}">归档</a></li>
+	        <li><a href="{{url_for('index_module.archive')}}">归档</a></li>
 	        <li><a href="#">关于</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
@@ -58,8 +58,8 @@
 {%block container%}{%endblock%}
 
 </body>
-<script src="../../static/lib/dist/js/jquery-1.11.0.min.js"></script>
-<script src="../../static/lib/dist/js/bootstrap.min.js"></script>
+<script src="/static/lib/dist/js/jquery-1.11.0.min.js"></script>
+<script src="/static/lib/dist/js/bootstrap.min.js"></script>
 
 
 <!-- cdn -->
