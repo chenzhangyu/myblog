@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session, abort, jsonify
-from ..db import db, Users, Passages, Tags, Details, Friends
+from ..db import db, Users, Passages, Tags, Details, Friends, Comments
+from ..db import Talks, Reports
 from ..weibo import get_client
 import functools
 import time
@@ -285,3 +286,30 @@ def del_friend():
     Friends.del_friend(request.form['fid'])
     db.session.commit()
     return jsonify(status=True)
+
+
+@admin_module.route('/del_comment', methods=['POST'])
+@admin_session
+def del_comment():
+    if 'mode' not in request.form:
+        abort(404)
+    if request.form['mode'] == 'reply':
+        if 'cid' not in request.form:
+            abort(400)
+        c = Comments.get_comment_by_id(request.form['cid'])
+        if not c or c.is_delete:
+            return jsonify(status=False)
+        c.is_delete = True
+        db.session.commit()
+        return jsonify(status=True)
+    elif request.form['mode'] == 'talk':
+        if 'tid' not in request.form:
+            abort(400)
+        t = Talks.get_talk_by_id(request.form['tid'])
+        if not t or t.is_delete:
+            return jsonify(status=False)
+        t.is_delete = True
+        db.session.commit()
+        return jsonify(status=True)
+    else:
+        abort(400)

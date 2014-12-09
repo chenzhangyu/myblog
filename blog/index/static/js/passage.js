@@ -3,9 +3,6 @@ function qs(key) {
     var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 }
-function get_votes(str) {
-
-}
 $(document).ready(function(){
 	$.ajax({
 		url: '/blog/get_content',
@@ -23,13 +20,18 @@ $(document).ready(function(){
 		}
 	});
 	$('#comment').click(function(){
+		var conten = $('#comment-input').val();
+		if (!conten) {
+			alert('不能留空( ⊙ o ⊙ )啊！');
+			return;
+		}
 		$.ajax({
 			url: '/blog/comment',
 			type: 'post',
 			dataType: 'json',
 			data: {
 				pid: qs('pid'),
-				comment: $('#comment-input').val()
+				comment: conten
 			}
 		}).done(function(data){
 			if (data.status === true) {
@@ -83,7 +85,7 @@ $(document).ready(function(){
 					}else{
 						var span = document.createElement('span');
 						$(span).addClass('votes').text('(1)');
-						$(this).children().append(span);
+						$(this).append(span);
 					}
 				}else{
 					var s = votes.text().slice(1, -1);
@@ -98,6 +100,20 @@ $(document).ready(function(){
 			}
 		})
 	});
+	$('.report').click(function(){
+		$('#reply-box').text('简单说一下原因,请不要留空');
+		if ($(this).parent().attr('mode') === 'talk') {
+			$('#reply-dialog').attr({
+				'mode': 'report_talk',
+				'tid': $(this).parent().attr('tid')
+			}).modal('show');
+		}else{
+			$('#reply-dialog').attr({
+				'mode': 'report_reply',
+				'cid': $(this).parent().attr('cid')
+			}).modal('show');
+		}
+	});
 	$('#submit-btn').click(function(){
 		var mode = $('#reply-dialog').attr('mode');
 		var content = $('#reply-input').val();
@@ -109,16 +125,25 @@ $(document).ready(function(){
 			var info = {
 				pid: qs('pid'),
 				cid: $('#reply-dialog').attr('cid'),
-				content: content
 			};
-		} else {
+		} else if (mode === 'talk'){
 			var info = {
 				pid: qs('pid'),
 				cid: $('#reply-dialog').attr('cid'),
 				tid: $('#reply-dialog').attr('tid'),
-				content: content
 			};
-		}
+		} else if (mode === 'report_reply') {
+			var info = {
+				mode: mode,
+				cid: $('#reply-dialog').attr('cid')
+			}
+		} else {
+			var info = {
+				mode: mode,
+				tid: $('#reply-dialog').attr('tid')
+			}
+		};
+		info.content = content;
 		$.ajax({
 			url: '/blog/' + mode,
 			type: 'post',
@@ -126,7 +151,11 @@ $(document).ready(function(){
 			data: info
 		}).done(function(data){
 			if (data.status === true){
-				window.location.href = '';
+				if (data.refresh === true) {
+					window.location.href = '';
+				} else {
+					$('#reply-dialog').modal('hide');
+				};
 			}
 		}).fail(function(){
 			alert('fail to operate!');

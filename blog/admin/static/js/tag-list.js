@@ -32,7 +32,6 @@ $(document).ready(function(){
 			}
 		}).done(function(data){
 			$(this).parent().parent().css('display', 'none');
-			// $(this).parent().parent().parent().remove($(this).parent().parent());
 		}).fail(function(){
 			alert('fail to operate');
 		});

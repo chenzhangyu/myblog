@@ -15,3 +15,8 @@
 	opacity: 0.6;
 	text-decoration: none;
 }
+.flash-msg{
+	margin-bottom: 0;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}

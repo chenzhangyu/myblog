@@ -10,6 +10,7 @@ class Users(db.Model):
     profile_url = db.Column(db.String(100), unique=True)
     registered_time = db.Column(db.DateTime)
     is_root = db.Column(db.Boolean, default=False)
+    is_activated = db.Column(db.Boolean, default=False)
     comment = db.relationship('Comments', backref='user',
         lazy='dynamic', passive_deletes=True)
     f_talk = db.relationship('Talks', foreign_keys='Talks.f_uid', 
@@ -23,6 +24,9 @@ class Users(db.Model):
         self.profile_img = img
         self.profile_url = url
         self.registered_time = time.strftime('%Y-%m-%d %H:%M:%S')
+
+    def activate(self):
+        self.is_activated = True
 
     @classmethod
     def is_registered(cls, sina_uid):

@@ -17,7 +17,16 @@
 
 </head>
 <body>
-
+{%block body%}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div id="flash-container">
+    {% for category, message in messages %}
+      <p class="flash-msg text-center {{ category }}">{{ message }}</p>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 	<nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid top-nav">
 	    <!-- Brand and toggle get grouped for better mobile display -->
@@ -57,10 +66,17 @@
 
 {%block container%}{%endblock%}
 
+{%endblock%}
 </body>
 <script src="/static/lib/dist/js/jquery-1.11.0.min.js"></script>
 <script src="/static/lib/dist/js/bootstrap.min.js"></script>
-
+<script>
+$(document).ready(function(){
+	$('.flash-msg').each(function(){
+		$(this).fadeOut(1800);
+	})
+});
+</script>
 
 <!-- cdn -->
 <!-- <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script> -->

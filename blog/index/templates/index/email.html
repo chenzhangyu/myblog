@@ -1,0 +1,21 @@
+{%extends "layout/base.html"%}
+{%block headScript%}
+{{super()}}
+	<link rel="stylesheet" href="{{url_for('.static', filename='css/email.css')}}">
+{%endblock headScript%}
+{%block body%}
+<div class="jumbotron">
+	<div class="wrapper">
+		<h2>在这里你可以填写你常用的邮箱,以便及时收到回复</h2>
+	  	<h4>你也可以选择留空</h4>
+	  	<div id="form">
+	  		<form action="{{url_for('index_module.add_email')}}" method="post" role="form">
+	  			<div class="form-group">
+	  				<input type="email" id="address" name="address" placeholder="常用邮箱" class="form-control">
+	  			</div>
+	  			<button type="submit" class="btn btn-success">Submit</button>
+	  		</form>
+	  	</div>
+	</div>
+</div>
+{%endblock body%}

@@ -1,14 +1,19 @@
+# -*-coding:utf-8-*-
+
 from flask import Blueprint, render_template, redirect, request, url_for
-from flask import session, abort, jsonify
+from flask import session, abort, jsonify, flash
+from itsdangerous import URLSafeSerializer, BadSignature
 from datetime import timedelta
-from ..db import db, Users, Details, Passages, Comments, Tags, Talks, Votes
+from ..db import db, Users, Details, Passages, Comments
+from ..db import Tags, Talks, Votes, Reports
 from ..db.pagination import Pagination
 from ..weibo import get_client
+from ..config import info as site_info
+from ..mail import send_mail
 import functools
 import math
 import time
 import functools
-
 
 def _get_referer():
     return session['Referer'] if 'Referer' in session else url_for('.index')
@@ -50,6 +55,22 @@ def online_session(func):
             return redirect(url_for('index_module.index'))
         return func(*args, **kw)
     return wrapper
+
+def get_serializer():
+    return URLSafeSerializer(r'\xf72.3\xd9\xe6t\xf8\xd9\\\x90\xf1\x9di\x9e\x90\xb7\xe4"\x12Q\x9d\nB')
+
+def get_activation_link(user):
+    s = get_serializer()
+    payload = s.dumps(user.id)
+    return url_for('.activate', payload=payload, _external=True)
+
+def send_reply_mail(user, url):
+    assert user.is_activated
+    sitename = site_info['site']['name']
+    content = ('You have new messages in ' + sitename + ' \n'
+               'For more details, click the following link\n\n' + url)
+    send_mail(user.email, 'new messages in ' + sitename, content)
+    return
 
 
 index_module = Blueprint('index_module', __name__,
@@ -132,12 +153,12 @@ def about():
 
 
 @index_module.route('/comment', methods=['POST'])
+@online_session
 def comment():
-    if 'id' not in session:
-        return jsonify(status=False)
-    elif 'pid' not in request.form or \
-        'comment' not in request.form or \
-        not Passages.is_shown(request.form['pid']):
+    if 'pid' not in request.form or \
+            'comment' not in request.form or \
+            not request.form['comment'] or \
+            not Passages.is_shown(request.form['pid']):
         abort(404)
     c = Comments(content=request.form['comment'],
                  pid=request.form['pid'],
@@ -151,6 +172,7 @@ def comment():
 @online_session
 def reply():
     if 'content' not in request.form or \
+            not request.form['content'] or \
             not _config_for_reply():
         return jsonify(status=False)
     c = Comments.get_comment_by_id(request.form['cid'])
@@ -161,14 +183,17 @@ def reply():
                          request.form['cid'],
                          session['id'],
                          c.uid))
+    if c.user.is_activated:
+        pass
     db.session.commit()
-    return jsonify(status=True)
+    return jsonify(status=True, refresh=True)
 
 
 @index_module.route('/talk', methods=['POST'])
 @online_session
 def talk():
     if 'content' not in request.form or \
+            not request.form['content'] or \
             not _config_for_talk():
         return jsonify(status=False)
     t = Talks.get_talk_by_id(request.form['tid'])
@@ -180,7 +205,7 @@ def talk():
                          session['id'],
                          t.f_uid))
     db.session.commit()
-    return jsonify(status=True)
+    return jsonify(status=True, refresh=True)
 
 
 @index_module.route('/vote', methods=['POST'])
@@ -192,7 +217,7 @@ def vote():
         if not _config_for_reply():
             return jsonify(status=False)
         c = Comments.get_comment_by_id(request.form['cid'])
-        if not c:
+        if not c or c.is_delete:
             return jsonify(status=False)
         v = Votes.get_vote(c.id, session['id'], False)
         if v is not None:
@@ -209,7 +234,7 @@ def vote():
         if not _config_for_talk():
             return jsonify(status=False)
         t = Talks.get_talk_by_id(request.form['tid'])
-        if not t:
+        if not t or t.is_delete:
             return jsonify(status=False)
         v = Votes.get_vote(t.id, session['id'], True)
         if v is not None:
@@ -226,10 +251,37 @@ def vote():
         return jsonify(status=False)
 
 
-@index_module.route('/report', methods=['POST'])
+@index_module.route('/report_reply', methods=['POST'])
+@index_module.route('/report_talk', methods=['POST'])
 @online_session
 def report():
-    pass
+    if 'mode' not in request.form or \
+            'content' not in request.form or \
+            not request.form['content']:
+        abort(404)
+    if request.form['mode'] == 'report_reply':
+        if not _config_for_reply():
+            return jsonify(status=False)
+        c = Comments.get_comment_by_id(request.form['cid'])
+        if not c or c.is_delete:
+            return jsonify(status=False)
+        db.session.add(Reports(c.id, 
+                               session['id'],
+                               request.form['content'],
+                               False))
+        db.session.commit()
+    elif request.form['mode'] == 'report_talk':
+        if not _config_for_talk():
+            return jsonify(status=False)
+        t = Talks.get_talk_by_id(request.form['tid'])
+        if not t or t.is_delete:
+            return jsonify(status=False)
+        db.session.add(Reports(t.id,
+                               session['id'],
+                               request.form['content'],
+                               False))
+        db.session.commit()
+    return jsonify(status=True, refresh=False)
 
 
 @index_module.route('/get_content', methods=['POST'])
@@ -245,7 +297,6 @@ def get_content():
 @index_module.route('/login/')
 def login():
     session['Referer'] = request.headers.get('Referer')
-    # client = _construct_client()
     client = get_client()
     url = client.get_authorize_url()
     return redirect(url)
@@ -268,7 +319,6 @@ def test_for_login():
         return redirect(redirect_uri)
     code = request.args.get('code')
     print code
-    # client = _construct_client()
     client = get_client()
     r = client.request_access_token(code)
     access_token = r.access_token
@@ -278,11 +328,12 @@ def test_for_login():
     session.permanent = True
     index_module.permanent_session_lifetime = timedelta(seconds=r.expires_in)
     session['access_token'] = client.access_token
-    session['sian_uid'] = r.uid
+    session['sina_uid'] = r.uid
     result = client.users.show.get(uid=r.uid)
     session['profile_url'] = result.profile_url
     session['username'] = result.screen_name
     if Users.is_registered(r.uid) == False:
+        session['input_email'] = True
         u_add = Users(sina_uid=r.uid, 
                       username=result.screen_name,
                       img=result.profile_image_url,
@@ -301,4 +352,45 @@ def test_for_login():
         session['id'] = u_update.id
     redirect_uri = _get_referer()
     session.pop('Referer')
+    return redirect(redirect_uri)
+
+@index_module.route('/email')
+def email_input():
+    if 'input_email' not in session:
+        abort(404)
+    return render_template('index/email.html')
+
+
+@index_module.route('/activate/<payload>')
+def activate(payload):
+    s = get_serializer()
+    try:
+        uid = s.loads(payload)
+    except BadSignature:
+        abort(404)
+    u = Users.query.get_or_404(uid)
+    u.activate()
+    db.session.commit()
+    flash(u'成功激活邮箱', 'bg-success')
+    return redirect(url_for('.index'))
+
+
+@index_module.route('/add_email', methods=['POST'])
+def add_email():
+    if 'input_email' not in session:
+        abort(404)
+    session.pop('input_email')
+    if 'address' in request.form and request.form['address']:
+        u = Users.query.get_or_404(session['id'])
+        u.email = request.form['address']
+        db.session.commit()
+        sitename = site_info['site']['name']
+        url = get_activation_link(u)
+        content = ('Please activate your account in ' + sitename + ' by click'
+               'the following link.\n'
+               'Ignore this email if you are not aware of it\n\n' + url)
+        send_mail(request.form['address'], 'activate your account', content)
+    redirect_uri = _get_referer()
+    if 'Referer' in session:
+        session.pop('Referer')
     return redirect(redirect_uri)

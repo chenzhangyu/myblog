@@ -1,0 +1,11 @@
+html, body, .jumbotron{
+	height: 100%;
+}
+.jumbotron{
+	margin-bottom: 0;
+	padding-top: 15%;
+}
+.wrapper{
+	width: 70%;
+	margin: auto;
+}

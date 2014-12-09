@@ -26,6 +26,12 @@
 	{%if votes%}<span class="votes">({{votes}})</span>{%endif%}
 {%endmacro%}
 
+{%macro render_del()%}
+	{%if 'root' in session and session['root']%}
+	<span class="action delete"><i class="fa fa-trash-o"></i>&nbsp;删除</span>
+	{%endif%}
+{%endmacro%}
+
 <div id="passage">
 	{%if passage%}
 		<div id="passage-item">
@@ -73,8 +79,9 @@
 						<div class="comment-content">{{comment.content}}</div>
 						<span class="comment-time">{{render_time(comment.pubdate)}}</span>
 						<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
-						<span class="action vote-up"><i class="fa fa-thumbs-o-up">&nbsp;点赞</i>{{render_votes(comment.vote_ups)}}</span>
-						<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>		
+						<span class="action vote-up"><i class="fa fa-thumbs-o-up"></i>&nbsp;点赞{{render_votes(comment.vote_ups)}}</span>
+						<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>
+						{{render_del()}}
 					</div>
 				</div>
 				<hr>
@@ -89,8 +96,9 @@
 								<div class="comment-content">{{talk.content}}</div>
 								<span class="comment-time">{{render_time(talk.pubdate)}}</span>
 								<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
-								<span class="action vote-up"><i class="fa fa-thumbs-o-up">&nbsp;点赞</i>{{render_votes(talk.vote_ups)}}</span>
+								<span class="action vote-up"><i class="fa fa-thumbs-o-up"></i>&nbsp;点赞{{render_votes(talk.vote_ups)}}</span>
 								<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>	
+								{{render_del()}}
 							</div>
 						</div>	
 						<hr>
@@ -156,4 +164,7 @@
 	<script src="/static/lib/marked.js"></script>
 	<script src="/static/lib/highlight/highlight.pack.js"></script>
 	<script src="{{url_for('.static', filename='js/passage.js')}}"></script>
+	{%if 'root' in session and session['root']%}
+	<script src="{{url_for('.static', filename='js/admin.js')}}"></script>
+	{%endif%}
 {%endblock%}
