@@ -1,0 +1,36 @@
+{%extends "admin/index.html"%}
+{%block adminIndexSection%}
+	<table class="table table-hover">
+	    <tbody>
+	    	{%for report in reports['comments']%}
+	    	<tr>
+	            <td>{{report.user.username}}</td>
+	            <td>{{report.content | truncate(10, True)}}</td>
+	    		<td><a href="{{url_for('index_module.passage')}}?pid={{report.pid}}" class="text-link">{{report.passage.title}}</a></td>
+	            <td>
+	            	<input type="hidden" value="{{report.id}}" mode="reply">
+	            	<span class="glyphicon glyphicon-trash pointer" title="忽略"></span>
+	            </td>
+	    	</tr>
+	    	{%endfor%}
+	    </tbody>
+	</table>
+	<table class="table table-hover">
+	    <tbody>
+	    	{%for report in reports['talks']%}
+	    	<tr>
+	            <td>{{report.user.username}}</td>
+	            <td>{{report.content | truncate(10, True)}}</td>
+	    		<td><a href="{{url_for('index_module.passage')}}?pid={{report.pid}}" class="text-link">{{report.passage.title}}</a></td>
+	            <td>
+	            	<input type="hidden" value="{{report.id}}" mode="talk">
+	            	<span class="glyphicon glyphicon-trash pointer" title="忽略"></span>
+	            </td>
+	    	</tr>
+	    	{%endfor%}
+	    </tbody>
+	</table>
+{%endblock adminIndexSection%}
+{%block footScript%}
+	<script src="{{url_for('.static', filename='js/reports.js')}}"></script>
+{%endblock footScript%}

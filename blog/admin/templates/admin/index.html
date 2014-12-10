@@ -1,8 +1,16 @@
 {%extends "admin/layout/admin.html"%}
+{% macro get_reports_sum() %}
+	{% if reports %}
+		{% if reports['sum'] > 0 %}
+			<span class="badge">{{reports['sum']}}</span>
+		{% endif %}
+	{% endif %}
+{% endmacro %}
 {%block rightCol%}
 <ul class="nav nav-tabs" role="tablist">
   <li role="presentation" {{site['home']}}><a href="{{url_for('.index')}}">Home</a></li>
   <li role="presentation" {{site['tags']}}><a href="{{url_for('.index_tags')}}">Tags</a></li>
+  <li role="presentation" {{site['reports']}}><a href="{{url_for('.reports')}}">Reports{{get_reports_sum()}}</a></li>
   <li role="presentation" {{site['dust']}}><a href="{{url_for('.index_dust')}}">Dust</a></li>
 </ul>
 <br>
@@ -11,7 +19,7 @@
 	    <tbody>
 	    	{%for passage in passage_list | default([])%}
 	        <tr>
-	            <td><a class="text-link">{{passage.title}}</a></td>
+	            <td><a href="{{url_for('index_module.passage')}}?pid={{passage.id}}" class="text-link">{{passage.title}}</a></td>
 	            <td><span class="glyphicon glyphicon-tags"></span>
 					{%for tag in passage.tags | default([])%}
 					<a class="text-link" href="{{url_for('.index')+'?tag='+tag.tag}}">{{tag.tag}}</a>

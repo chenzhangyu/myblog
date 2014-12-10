@@ -1,4 +1,5 @@
 from . import db
+import time
 
 class Details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -6,6 +7,14 @@ class Details(db.Model):
     keywords = db.Column(db.String(80))
     summary = db.Column(db.String(50))
     description = db.Column(db.Text)
+    pubdate = db.Column(db.DateTime)
+
+    def __init__(self, title, keywords, summary, description):
+        self.title = title
+        self.keywords = keywords
+        self.summary = summary
+        self.description = description
+        self.pubdate = time.strftime('%Y-%m-%d %H:%M:%S')
 
     @classmethod
     def is_default(cls):
@@ -36,4 +45,5 @@ class Details(db.Model):
         d.keywords = keywords
         d.summary = summary
         d.description = description
+        d.pubdate = time.strftime('%Y-%m-%d %H:%M:%S')
         return

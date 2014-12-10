@@ -10,33 +10,29 @@
 			<div class="col-md-2 col-xs-12 col-md-offset-1">
 				<div class="left-col text-center">
 					<img src="{{url_for('.static', filename='img/head.png')}}" alt="fail" class="img-circle head-png">
-					<p id="personal-summary">TBD personal-summary from database</p>
+					<p id="personal-summary">{{my_site_config['info']['summary']}}</p>
 					
 					<div id="friend-link">
 						<div class="panel panel-default">
 						  <div class="panel-heading">友情链接</div>
 						  <div class="panel-body">
 						    <ul>
-						    	<li><a href="#">a</a></li>
-						    	<li><a href="#">b</a></li>
-						    	<li><a href="#">c</a></li>
-						    	<li><a href="#">d</a></li>
+						    	{%for friend in my_site_config['friends']%}
+						    		<li><a href="{{friend['link']}}">{{friend['description']}}</a></li>
+						    	{%else%}
+						    		<span class="text-center">虚位以待</span>
+						    	{%endfor%}
 						    </ul>
 						  </div>
 						</div>
 
-					</div>
-					<div id="social-link">
-						<a class="text-muted" href="#" title="github"><i class="fa fa-github fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
-						<a class="text-muted" href="#" title="rss"><i class="fa fa-rss-square fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
-						<a class="text-muted" href="#" title="mail"><i class="fa fa-envelope fa-2x"></i></a>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-8 col-xs-12">
 				<div class="right-col">{%block rightPart%}{%endblock rightPart%}</div>
 				<div class="footer">
-					<p class="text-right footer">powered by <a href="#">Zhangyu Chen</a> with <a href="http://getbootstrap.com/">Bootstrap</a></p>
+					<p class="text-right footer">powered by <a target="blank" href="http://www.google.com/recaptcha/mailhide/d?k=012HgFo4jimdYqnZox3BLV9Q==&c=m--FaB96PfMXq_ksmp-4mLovK60e6twUVn9To7XyBxc=">Zhangyu Chen</a> with <a href="http://getbootstrap.com/">Bootstrap</a></p>
 				</div>
 			</div>
 		</div>

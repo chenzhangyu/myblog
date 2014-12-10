@@ -36,3 +36,7 @@ class Comments(db.Model):
             return False
         else:
             return c.pid == pid
+
+    @classmethod
+    def get_reports(cls):
+        return cls.query.filter(cls.is_delete==False, cls.is_warning>0).all()

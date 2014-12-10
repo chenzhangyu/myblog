@@ -6,7 +6,6 @@ from ..weibo import get_client
 import functools
 import time
 
-
 admin_module = Blueprint('admin_module', __name__,
         template_folder='templates', static_folder='static')
 
@@ -31,10 +30,8 @@ def index():
         passages = Passages.get_all_passages_exc_deleted()
         passages.reverse()
     elif Tags.is_avaliable(request.args.get('tag')):
-        print request.args.get('tag')
         passages = Tags.get_passages_by_tag_exc_deleted(request.args.get('tag')) 
     else:
-        print 'not found'
         abort(404)
     return render_template('admin/index.html', site=site, passage_list=passages)
 
@@ -79,6 +76,18 @@ def index_tags():
     return render_template('admin/tag_list.html', site=site, tags = tag_list)
 
 
+@admin_module.route('/reports')
+@admin_session
+def reports():
+    site = {'index': 'active'}
+    site['reports'] = 'class=active'
+    reports = {}
+    reports['comments'] = Comments.get_reports()
+    reports['talks'] = Talks.get_reports()
+    reports['sum'] = len(reports['comments']) + len(reports['talks'])
+    return render_template('admin/reports.html', site=site, reports=reports)
+
+
 @admin_module.route('/edit')
 @admin_session
 def edit():
@@ -89,11 +98,13 @@ def edit():
     passage = Passages.get_passage_by_id(request.args.get('pid'))
     if not passage:
         abort(404)
+    passage.is_draft = True
     for t in tagList:
         if t['tag'] in [x.tag for x in passage.tags]:
             t['checked'] = True
         else:
             t['checked'] = False
+    db.session.commit()
     return render_template('admin/edit.html',
                            site=site,
                            tags=tagList,
@@ -123,9 +134,7 @@ def upload_passage():
     assert request.method == 'POST'
     assert request.path == '/admin/upload_passage'
     for need in _infoForPassage:
-        print need
         if need not in request.form or not request.form[need]:
-            print 'illegal'
             abort(400)
     p = Passages(
             title=request.form['title'],
@@ -135,7 +144,6 @@ def upload_passage():
     p.set_tags(request.form.getlist('tags'))
     db.session.add(p)
     db.session.commit()
-    print request.form.getlist('tags')
     return redirect(url_for('.index'))
 
 
@@ -156,10 +164,7 @@ def update_passage():
 @admin_module.route('/add_tag', methods=['POST'])
 @admin_session
 def add_tag():
-    print request.json
-    print request.json['tagList']
     if not 'tagList' in request.json or not request.json['tagList']:
-        print '>>>self stop'
         abort(400)
     t_list = []
     for item in request.json['tagList']:
@@ -171,7 +176,6 @@ def add_tag():
             t_list.append(t)
     db.session.commit()
     result = [{'tid': x.id, 'tag': x.tag} for x in t_list]
-    print result
     if t_list:
         return jsonify(status=True, result=result)
     else:
@@ -266,8 +270,6 @@ def update_friend():
     for x in _info:
         if x not in request.form or not request.form[x]:
             abort(400)
-        else:
-            print x, request.form[x]
     if not Friends.is_registered_by_id(request.form['fid']):
         return jsonify(status=False)
     Friends.update_friend(fid=request.form['fid'], 
@@ -309,6 +311,32 @@ def del_comment():
         if not t or t.is_delete:
             return jsonify(status=False)
         t.is_delete = True
+        db.session.commit()
+        return jsonify(status=True)
+    else:
+        abort(400)
+
+@admin_module.route('/ignore_report', methods=['POST'])
+@admin_session
+def ignore_report():
+    if 'mode' not in request.form:
+        abort(404)
+    if request.form['mode'] == 'reply':
+        if 'cid' not in request.form:
+            abort(400)
+        c = Comments.get_comment_by_id(request.form['cid'])
+        if not c or c.is_delete:
+            return jsonify(status=False)
+        c.is_warning = 0
+        db.session.commit()
+        return jsonify(status=True)
+    elif request.form['mode'] == 'talk':
+        if 'tid' not in request.form:
+            abort(404)
+        t = Talks.get_talk_by_id(request.form['tid'])
+        if not t or t.is_delete:
+            return jsonify(status=False)
+        t.is_warning = 0
         db.session.commit()
         return jsonify(status=True)
     else:

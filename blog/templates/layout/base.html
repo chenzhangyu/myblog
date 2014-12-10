@@ -3,20 +3,24 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="{{config['summary'] | d('我手记我心, Zhangyu Chen的个人博客')}}">
-	<meta name="keywords" content="{{config['keyword'] | d('web backend')}}">
-	<title>{{config['title'] | d('Zhangyu Chen的个人博客')}}</title>
-	<link href="/static/lib/dist/css/bootstrap.min.css" rel="stylesheet">
+	{%if my_site_config%}
+	<meta name="description" content="{{my_site_config['info']['summary'] | d('我手记我心, Zhangyu Chen的个人博客')}}">
+	<meta name="keywords" content="{{my_site_config['info']['keyword'] | d('web backend')}}">
+	<title>{{my_site_config['info']['title'] | d('Zhangyu Chen的个人博客')}}</title>
+	{%else%}
+	<meta name="description" content="我手记我心, Zhangyu Chen的个人博客">
+	<meta name="keywords" content="web backend">
+	<title>Zhangyu Chen的个人博客</title>
+	{%endif%}
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="/static/css/base.css">
 
 	<!-- <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=2858452607&debug=true" type="text/javascript" charset="utf-8"></script> -->
-	<!-- <link rel="stylesheet" href="../../static/lib/font-awesome.min.css"> -->
-<!-- cdn -->
-<!-- 	<link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet"> -->
 {%block headScript%}{%endblock headScript%}
 
 </head>
 <body>
+<div id="body-container">		
 {%block body%}
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -47,7 +51,7 @@
 	      	<li><a href="{{url_for('admin_module.index')}}">控制台</a></li>
 	      	{%endif%}
 	        <li><a href="{{url_for('index_module.archive')}}">归档</a></li>
-	        <li><a href="#">关于</a></li>
+	        <li><a href="{{url_for('index_module.about')}}">关于</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 			 <li>
@@ -55,7 +59,7 @@
 			<a id='user-login' href="http://weibo.com/{{session['profile_url']}}">{{session['username']}}</a>
 			<a id="logout" href="{{url_for('index_module.logout')}}">logout</a>
 			{%else%}
-			<a href="{{url_for('index_module.login')}}">login</a>
+			<a href="{{url_for('index_module.login')}}">微博登陆</a>
 			{%endif%}
 			 </li>
 	        <!-- <li><a href="#"></a></li> -->
@@ -67,9 +71,12 @@
 {%block container%}{%endblock%}
 
 {%endblock%}
+</div>
 </body>
-<script src="/static/lib/dist/js/jquery-1.11.0.min.js"></script>
-<script src="/static/lib/dist/js/bootstrap.min.js"></script>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<!-- <script src="/static/lib/dist/js/jquery-1.11.0.min.js"></script>
+<script src="/static/lib/dist/js/bootstrap.min.js"></script> -->
 <script>
 $(document).ready(function(){
 	$('.flash-msg').each(function(){
@@ -79,7 +86,6 @@ $(document).ready(function(){
 </script>
 
 <!-- cdn -->
-<!-- <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script> -->
-<!-- <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> -->
+
 {%block footScript%}{%endblock%}
 </html>

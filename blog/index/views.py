@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session, abort, jsonify, flash
 from itsdangerous import URLSafeSerializer, BadSignature
 from datetime import timedelta
-from ..db import db, Users, Details, Passages, Comments
+from ..db import db, Users, Details, Passages, Comments, Friends
 from ..db import Tags, Talks, Votes, Reports
 from ..db.pagination import Pagination
 from ..weibo import get_client
@@ -19,7 +19,8 @@ def _get_referer():
     return session['Referer'] if 'Referer' in session else url_for('.index')
 
 def _get_config():
-    return Details.get_info()
+    return {'info':Details.get_info(), 
+            'friends':Friends.get_all_friends_exc_deleted()}
 
 def _test_for_int(value):
     try:
@@ -93,13 +94,11 @@ def index():
         has_next = False if not page and not len(ps) or \
             Passages.is_end(ps[len(ps)-1].id) else True
         has_previous = True if page else False
-    print 'page is', page, has_next
     page_info = {'page': page,
                  'has_previous': has_previous, 
                  'has_next': has_next}
-    print page_info
     return render_template('index/index.html', 
-                           config=_get_config(), 
+                           my_site_config=_get_config(), 
                            passages=ps,
                            page=page_info)
 
@@ -116,7 +115,7 @@ def archive(page):
         abort(404)
     pagination = Pagination(page, 1, count)
     return render_template('index/categories.html', 
-                           config=_get_config(),
+                           my_site_config=_get_config(),
                            passages=ps,
                            pagination=pagination)
 
@@ -127,7 +126,7 @@ def categories(kind):
         abort(404)
     ps = Passages.get_all_passages_for_list(kind=kind)
     return render_template('index/categories.html', 
-                           config=_get_config(),
+                           my_site_config=_get_config(),
                            passages=ps,
                            kind=kind)
 
@@ -143,14 +142,14 @@ def passage():
         abort(404)
     nav = {'prev': p.prev_item, 'next': p.next_item}
     return render_template('index/passage.html', 
-                           config=_get_config(),
+                           my_site_config=_get_config(),
                            passage=p,
                            nav=nav)
 
 @index_module.route('/about')
 def about():
-    pass
-
+    return render_template('/index/about.html',
+                           my_site_config=_get_config())
 
 @index_module.route('/comment', methods=['POST'])
 @online_session
@@ -183,8 +182,10 @@ def reply():
                          request.form['cid'],
                          session['id'],
                          c.uid))
-    if c.user.is_activated:
-        pass
+    if site_info['email']['engine'] == 'on' and c.user.is_activated:
+        url = 'http://' + site_info['site']['url'] + url_for('.passage') + \
+            '?pid=' + str(c.pid)
+        send_reply_mail(c.user, url)
     db.session.commit()
     return jsonify(status=True, refresh=True)
 
@@ -204,6 +205,10 @@ def talk():
                          t.cid,
                          session['id'],
                          t.f_uid))
+    if site_info['email']['engine'] == 'on' and t.f_user.is_activated:
+        url = 'http://' + site_info['site']['url'] + url_for('.passage') + \
+            '?pid=' + str(t.pid)
+        send_reply_mail(t.f_user, url)
     db.session.commit()
     return jsonify(status=True, refresh=True)
 
@@ -318,13 +323,11 @@ def test_for_login():
         session.pop('Referer')
         return redirect(redirect_uri)
     code = request.args.get('code')
-    print code
     client = get_client()
     r = client.request_access_token(code)
     access_token = r.access_token
     expires_in = r.expires_in
     client.set_access_token(access_token, expires_in)
-    print 'uid is', r.uid
     session.permanent = True
     index_module.permanent_session_lifetime = timedelta(seconds=r.expires_in)
     session['access_token'] = client.access_token
@@ -341,6 +344,7 @@ def test_for_login():
         db.session.add(u_add)
         db.session.commit()
         session['id'] = u_add.id
+        return redirect(url_for('.email_input'))
     else:
         u_update = Users.query.filter_by(sina_uid=r.uid).first()
         u_update.username = result.screen_name
@@ -350,9 +354,9 @@ def test_for_login():
         if u_update.is_root:
             session['root'] = True
         session['id'] = u_update.id
-    redirect_uri = _get_referer()
-    session.pop('Referer')
-    return redirect(redirect_uri)
+        redirect_uri = _get_referer()
+        session.pop('Referer')
+        return redirect(redirect_uri)
 
 @index_module.route('/email')
 def email_input():

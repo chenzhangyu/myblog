@@ -6,6 +6,7 @@
 		"database": "test"
 	},
 	"email": {
+		"engine": "off",
 		"address": "18202788138@163.com",
 		"smtp": "smtp.163.com",
 		"password": "html089css"

@@ -1,4 +1,4 @@
-html, body, .jumbotron{
+html, body, #body-container, .jumbotron{
 	height: 100%;
 }
 .jumbotron{

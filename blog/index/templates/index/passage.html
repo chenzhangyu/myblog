@@ -26,11 +26,20 @@
 	{%if votes%}<span class="votes">({{votes}})</span>{%endif%}
 {%endmacro%}
 
-{%macro render_del()%}
+{%macro admin_view(item)%}
+	<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
+	<span class="action vote-up"><i class="fa fa-thumbs-o-up"></i>&nbsp;点赞{{render_votes(item.vote_ups)}}</span>
 	{%if 'root' in session and session['root']%}
-	<span class="action delete"><i class="fa fa-trash-o"></i>&nbsp;删除</span>
+		{%if item.is_warning %}
+			<span class="text-danger">举报次数({{item.is_warning}})</span>&nbsp;
+		{%endif%}
+		<span class="action delete"><i class="fa fa-trash-o"></i>&nbsp;删除</span>	
+	{%else%}
+		<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>
 	{%endif%}
 {%endmacro%}
+
+
 
 <div id="passage">
 	{%if passage%}
@@ -78,10 +87,7 @@
 						{{render_username(comment.user)}}
 						<div class="comment-content">{{comment.content}}</div>
 						<span class="comment-time">{{render_time(comment.pubdate)}}</span>
-						<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
-						<span class="action vote-up"><i class="fa fa-thumbs-o-up"></i>&nbsp;点赞{{render_votes(comment.vote_ups)}}</span>
-						<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>
-						{{render_del()}}
+						{{admin_view(comment)}}
 					</div>
 				</div>
 				<hr>
@@ -95,10 +101,7 @@
 								{{render_username(talk.f_user)}}&nbsp;回复&nbsp;{{render_username(talk.t_user)}}
 								<div class="comment-content">{{talk.content}}</div>
 								<span class="comment-time">{{render_time(talk.pubdate)}}</span>
-								<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
-								<span class="action vote-up"><i class="fa fa-thumbs-o-up"></i>&nbsp;点赞{{render_votes(talk.vote_ups)}}</span>
-								<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>	
-								{{render_del()}}
+								{{admin_view(talk)}}
 							</div>
 						</div>	
 						<hr>
@@ -106,23 +109,6 @@
 				{%endfor%}
 			{%endif%}
 		{%endfor%}
-
-		<div class="comment-item comment-item-reply">
-			<div class="profile-image">
-				<img src="{{url_for('.static', filename='img/1.jpg')}}" alt="hhh">	
-			</div>
-			<div class="comment-session">
-				<span class="comment-person text-primary person">woiweb</span>&nbsp;回复&nbsp;
-				<span class="text-primary">进击的计算机</span>
-				<div class="comment-content">asl;dfjas;ldkja;lskda;lskdf;alskda;lskd</div>
-				<span class="comment-time">2014-10-10</span>
-				<span class="action reply"><i class="fa fa-reply"></i>&nbsp;回复</span>
-				<span class="action vote-up"><i class="fa fa-thumbs-o-up">&nbsp;点赞(4)</i></span>
-				<span class="action report"><i class="fa fa-flag"></i>&nbsp;举报</span>	
-			</div>
-				
-		</div>
-		<hr>
 		
 	</div>
 

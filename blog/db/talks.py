@@ -31,3 +31,7 @@ class Talks(db.Model):
         if not t:
             return False
         return t.pid == pid and t.cid == cid
+
+    @classmethod
+    def get_reports(cls):
+        return cls.query.filter(cls.is_delete==False, cls.is_warning>0).all()

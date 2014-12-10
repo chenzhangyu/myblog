@@ -18,13 +18,8 @@ def send_mail(to_addr, subject, content):
     from_addr = info['email']['address']
     password = info['email']['password']
     smtp_server = info['email']['smtp']
-    print from_addr, password, smtp_server
-    # from_addr = '18202788138@163.com'
-    # password = 'html089css'
-    # smtp_server = 'smtp.163.com'
 
     msg = MIMEText(content, 'plain', 'utf-8')
-    # msg['From'] = _format_addr(u'%s <%s>' % (info['site']['name'], from_addr))
     msg['From'] = _format_addr(u'%s <%s>' % ('name', from_addr))
     msg['To'] = _format_addr(u'to <%s>' % to_addr)
     msg['Subject'] = Header(subject, 'utf-8').encode()
@@ -34,5 +29,3 @@ def send_mail(to_addr, subject, content):
     server.login(from_addr, password)
     server.sendmail(from_addr, [to_addr], msg.as_string())
     server.quit()
-
-# send_mail('1843291499@qq.com', 'fff', 'ffffff')

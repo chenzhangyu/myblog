@@ -6,7 +6,7 @@
 <div class="passage-list">
 	{%for passage in passages%}
 	<div class="passage">
-		<a href="{{url_for('.passage')}}?pid={{passage.id}}" class="passage-link">{{passage.title}}</a>
+		<a target="blank" href="{{url_for('.passage')}}?pid={{passage.id}}" class="passage-link">{{passage.title}}</a>
 		<span class="detail text-right">
 			<div>
 				<i class="fa fa-calendar"></i><span class="pubdate">{{passage.pubdate | string | truncate(10, True, end='')}}</span>
@@ -20,22 +20,6 @@
 		</span>
 	</div>	
 	{%endfor%}
-
-	<div class="passage">
-		<a href="{{url_for('.passage')}}" class="passage-link">title</a>
-		<span class="detail text-right">
-			<div>
-				<i class="fa fa-calendar"></i><span class="pubdate">2014-10-10</span>
-			</div>
-			<div>
-				<i class="fa fa-tags"></i>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-				<a href="#" class="tag-item">tag</a>
-			</div>
-		</span>
-	</div>
 
 </div>
 

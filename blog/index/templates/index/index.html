@@ -15,9 +15,9 @@
 			{%endfor%}
 		</span>
 	</p>
-	<a href="{{url_for('.passage')}}?pid={{passage.id}}" class="article-item title">{{passage.title}}</a>
+	<a target="blank" href="{{url_for('.passage')}}?pid={{passage.id}}" class="article-item title">{{passage.title}}</a>
 	<p class="article-item description">
-		{{passage.description}}<a href="{{url_for('.passage')}}?pid={{passage.id}}" title="more" class="more"><i class="fa fa-chevron-circle-right"></i></a>
+		{{passage.description}}<a target="blank" href="{{url_for('.passage')}}?pid={{passage.id}}" title="more" class="more"><i class="fa fa-chevron-circle-right"></i></a>
 	</p>
 </div>
 {%endfor%}

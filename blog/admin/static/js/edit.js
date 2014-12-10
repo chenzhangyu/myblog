@@ -4,6 +4,13 @@ $(document).ready(function(){
 		$('#msg').text('');
 		$('#addTagModal').modal('show');
 	});
+	// $('.glyphicon-fullscreen').click(function(){
+	// 	var editor = document.createElement('textarea');
+	// 	$(editor).attr('rows', 10);
+	// 	$('#body-container').fadeOut(500);
+	// 	$('body').append(editor);
+
+	// });
 	$('#tag-submit').click(function(){
 		$.ajax({
 			url: '/admin/add_tag',

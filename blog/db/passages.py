@@ -1,4 +1,3 @@
-import time
 from . import db
 from . import Tags
 from . import pas_tag
@@ -94,7 +93,6 @@ class Passages(db.Model):
 
     @classmethod
     def _get_limit_passages(cls, limit=0, offset=0):
-        print str(cls.query.filter_by(is_draft=False).order_by(cls.pubdate.desc()).offset(offset).limit(limit))
         return cls.query.filter_by(is_draft=False)\
             .order_by(cls.pubdate.desc()).offset(offset).limit(limit).all()
 
@@ -113,9 +111,6 @@ class Passages(db.Model):
         """
         last_passage = cls.query.filter_by(is_draft=False)\
             .order_by(cls.pubdate).first()
-        print last_passage.id
-        print pid == last_passage.id
-        print last_passage is None
         return pid == last_passage.id or last_passage is None
 
     @classmethod

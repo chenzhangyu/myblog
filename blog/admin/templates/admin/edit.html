@@ -24,12 +24,13 @@
 		{%endif%}
 	</span>
 		<button type="button" class="btn btn-primary btn-sm" id="add-tag-btn">增加</button>
+		<span class="glyphicon glyphicon-fullscreen pointer"></span>
 	
 	<div class="form-group">
 		<textarea class="form-control" rows="3" name="description" placeholder="请给个简单的介绍吧~" required>{{passage['description'] if passage else ''}}</textarea>
 	</div>
 	<div class="form-group">
-		<textarea class="form-control" rows="30" name="content" placeholder="正文" required>{{passage['content'] if passage else ''}}</textarea>
+		<textarea class="form-control" rows="30" id="edit-content" name="content" placeholder="正文" required>{{passage['content'] if passage else ''}}</textarea>
 	</div>
 	{%if passage is defined%}
 		<input type="hidden" name="pid" value="{{passage.id}}">
