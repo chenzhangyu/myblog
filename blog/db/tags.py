@@ -9,10 +9,6 @@ class Tags(db.Model):
             secondary=pas_tag, 
             backref=db.backref("tags", lazy="dynamic"), 
             passive_deletes=True)
-    # tag_pas = db.relationship('Passages',
-    #                            secondary=pas_tag,
-    #                            backref='tags',
-    #                            lazy='dynamic')
 
     def __init__(self, tag):
         self.tag = tag
@@ -66,11 +62,11 @@ class Tags(db.Model):
         return result
 
     @classmethod
-    def get_passages_by_tag_exc_deleted(cls, tag, kind='all'):
+    def get_passages_by_tag_exc_deleted(cls, tag, limited=True):
         assert cls.is_avaliable(tag)
         t = cls.get_avaliable_tag(tag)
         # including drafts
-        if kind == 'all':
+        if limited == False:
             return [p1 for p1 in sorted(t.passages.all(), \
                                           key=lambda x: x.pubdate, \
                                           reverse=True) \

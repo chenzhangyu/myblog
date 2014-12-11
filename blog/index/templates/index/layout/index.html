@@ -5,13 +5,12 @@
 {%block indexHeadScript%}{%endblock indexHeadScript%}
 {%endblock headScript%}
 {%block container%}
-	<div class="container">
+	<div class="container" id="container-div">
 		<div class="row">
 			<div class="col-md-2 col-xs-12 col-md-offset-1">
 				<div class="left-col text-center">
 					<img src="{{url_for('.static', filename='img/head.png')}}" alt="fail" class="img-circle head-png">
 					<p id="personal-summary">{{my_site_config['info']['summary']}}</p>
-					
 					<div id="friend-link">
 						<div class="panel panel-default">
 						  <div class="panel-heading">友情链接</div>
@@ -37,4 +36,10 @@
 			</div>
 		</div>
 	</div>
+	</div>
+	<div id="calculator">
+		<script type="text/javascript">
+		var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F8419f23d48052a1905e14d9913aeb69c' type='text/javascript'%3E%3C/script%3E"));
+	</script>
 {%endblock container%}

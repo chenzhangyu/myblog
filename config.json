@@ -1,8 +1,8 @@
 {
 	"SQL": {
 		"type": "mysql",
-		"user": "root",
-		"password": "chenzhangyu",
+		"user": "limit",
+		"password": "testforlimit",
 		"database": "test"
 	},
 	"email": {

@@ -1,3 +1,18 @@
+html{
+	min-height: 100%;
+}
+body{
+	position: relative;
+	min-height: 100%;
+}
+#body-container{
+	position: relative;
+}
+div#calculator{
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+}
 body{
 	background-image: url("../../static/img/bg.png");
 }

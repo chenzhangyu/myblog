@@ -5,7 +5,7 @@
 {%block rightCol%}
 <form action="{{url_for('.update_passage') if passage else url_for('.upload_passage')}}" method="POST" role="form">
 	<div class="form-group">
-		<input type="text" class="form-control" name="title" placeholder="标题" required autofocus value="{{passage.title if passage else ''}}">
+		<input type="text" class="form-control" id="title" name="title" placeholder="标题" required autofocus value="{{passage.title if passage else ''}}">
 	</div>
 	<span class="form-group" id="tag-list">
 		<span style="margin-right:5px"><strong>标签</strong></span>
@@ -24,20 +24,20 @@
 		{%endif%}
 	</span>
 		<button type="button" class="btn btn-primary btn-sm" id="add-tag-btn">增加</button>
-		<span class="glyphicon glyphicon-fullscreen pointer"></span>
+		<button type="button" class="btn btn-success btn-sm" id="preview">预览</button>
 	
 	<div class="form-group">
-		<textarea class="form-control" rows="3" name="description" placeholder="请给个简单的介绍吧~" required>{{passage['description'] if passage else ''}}</textarea>
+		<textarea class="form-control" rows="3" id="description" name="description" placeholder="请给个简单的介绍吧~" required>{{passage['description'] if passage else ''}}</textarea>
 	</div>
 	<div class="form-group">
-		<textarea class="form-control" rows="30" id="edit-content" name="content" placeholder="正文" required>{{passage['content'] if passage else ''}}</textarea>
+		<textarea class="form-control" rows="30" id="content" name="content" placeholder="正文" required>{{passage['content'] if passage else ''}}</textarea>
 	</div>
 	{%if passage is defined%}
-		<input type="hidden" name="pid" value="{{passage.id}}">
+		<input type="hidden" id="pid" name="pid" value="{{passage.id}}">
 	{%endif%}
 	<div class="text-right">
 		<a href="{{url_for('.index')}}" role="button" class="btn btn-warning">取消</a>
-		<button type="submit" class="btn btn-success">保存</button>
+		<button type="submit" id="submit-passage" class="btn btn-success">保存</button>
 	</div>
 	
 </form>
@@ -62,7 +62,26 @@
   </div>
 </div>
 
+<div class="modal fade" id="preview-dialog" tabindex="-1" role="dialog" aria-labelledby="preview-box" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="preview-box">预览</h4>
+      </div>
+      <div class="modal-body">
+      	<div id="preview-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {%endblock rightCol%}
 {%block footScript%}
+<script src="/static/lib/marked.js"></script>
+<script src="/static/lib/highlight/highlight.pack.js"></script>
 <script src="{{url_for('.static', filename='js/edit.js')}}"></script>
 {%endblock footScript%}

@@ -39,6 +39,53 @@ $(document).ready(function(){
 			}
 		}).fail(failToCall);
 	});
+	// $('#submit-passage').click(function(){
+	// 	var title = $('#title').val();
+	// 	var description = $('#description').val();
+	// 	var tags = [];
+	// 	$("input[type='checkbox']").each(function(i){
+	// 		if ($(this).is(':checked')) {
+	// 			tags.push($(this).val());
+	// 		};
+	// 	});
+	// 	var content = $('#content').val();
+	// 	var info = {
+	// 		'title': title,
+	// 		'description': description,
+	// 		'tags': tags,
+	// 		'content': marked(content)
+	// 	};
+	// 	if ($('#pid').length) {
+	// 		info['pid'] = $('pid').val();
+	// 	};
+	// 	console.log(info);
+	// 	for(key in info){
+	// 		if (!info[key].length) {
+	// 			alert('some info is null!');
+	// 			return;
+	// 		};
+	// 	};
+	// 	$.ajax({
+	// 		url: $('#form').attr('url'),
+	// 		type: 'post',
+	// 		dataType: 'json',
+	// 		data: info
+	// 	}).done(function(data){
+	// 		if (data.status === true) {
+	// 			// window.location.href = '/admin/home';
+	// 		}else{
+	// 			alert('fail to operate!')
+	// 		}
+	// 	})
+
+	// });
+	$('#preview').click(function(){
+		$('#preview-dialog').modal('show');
+		$("#preview-content").html(marked($('#content').val()));
+		$('#preview-content pre code').each(function(i, block){
+			hljs.highlightBlock(block);
+		});
+	})
 });
 
 function failToCall () {

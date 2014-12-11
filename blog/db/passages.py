@@ -134,7 +134,7 @@ class Passages(db.Model):
         if kind == 'all':
             return cls._get_limit_passages(limit=limit, offset=offset)
         else:
-            return Tags.get_passages_by_tag_exc_deleted(kind)
+            return Tags.get_passages_by_tag_exc_deleted(tag=kind)
 
     @classmethod
     def get_all_passages_exc_deleted(cls):

@@ -106,14 +106,14 @@ def index():
 @index_module.route('/archive/', defaults={'page':1})
 @index_module.route('/archive/<int:page>')
 def archive(page):
-    limit = 1
+    limit = 10
     ps = Passages.get_all_passages_for_list(limit=limit,
                                             offset=(page-1)*limit,
                                             kind='all')
     count = Passages.count()
     if not ps and page != 1:
         abort(404)
-    pagination = Pagination(page, 1, count)
+    pagination = Pagination(page, limit, count)
     return render_template('index/categories.html', 
                            my_site_config=_get_config(),
                            passages=ps,

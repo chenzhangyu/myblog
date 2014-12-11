@@ -1,5 +1,6 @@
 from . import db
 import time
+from datetime import datetime
 
 class Details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,7 +34,8 @@ class Details(db.Model):
             info = {'title': 'title',
                     'keywords': 'keywords',
                     'summary': 'summary',
-                    'description': 'description'}
+                    'description': 'description',
+                    'pubdate': datetime.now()}
         return info
 
     @classmethod

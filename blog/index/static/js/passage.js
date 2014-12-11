@@ -14,7 +14,7 @@ $(document).ready(function(){
 	}).done(function(data){
 		if(data.status === true){
 			$("#passage-content").html(marked(data.result));
-			$('pre code').each(function(i, block){
+			$('#passage-content pre code').each(function(i, block){
 				hljs.highlightBlock(block);
 			});
 		}

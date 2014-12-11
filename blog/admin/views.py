@@ -30,7 +30,7 @@ def index():
         passages = Passages.get_all_passages_exc_deleted()
         passages.reverse()
     elif Tags.is_avaliable(request.args.get('tag')):
-        passages = Tags.get_passages_by_tag_exc_deleted(request.args.get('tag')) 
+        passages = Tags.get_passages_by_tag_exc_deleted(request.args.get('tag'), False) 
     else:
         abort(404)
     return render_template('admin/index.html', site=site, passage_list=passages)
@@ -130,6 +130,9 @@ def friend():
 @admin_module.route('/upload_passage', methods=['POST'])
 @admin_session
 def upload_passage():
+    # print request.form
+    # print type(request.form.getlist('tags[]'))
+    # print request.form.getlist('tags[]')
     _infoForPassage = ['title', 'content', 'description']
     assert request.method == 'POST'
     assert request.path == '/admin/upload_passage'
