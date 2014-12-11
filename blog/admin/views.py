@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for
 from flask import session, abort, jsonify
 from ..db import db, Users, Passages, Tags, Details, Friends, Comments
 from ..db import Talks, Reports
+from ..db.pagination import Pagination
 from ..weibo import get_client
 import functools
 import time
@@ -19,21 +20,24 @@ def admin_session(func):
     return wrapper
 
 
-@admin_module.route('/')
-@admin_module.route('/index')
-@admin_module.route('/home')
+@admin_module.route('/index/', defaults={'page':1})
+@admin_module.route('/index/<int:page>')
 @admin_session
-def index():
+def index(page):
+    limit = 10
     site = {'index': 'active'}
     site['home'] = 'class=active'
     if 'tag' not in request.args:
-        passages = Passages.get_all_passages_exc_deleted()
-        passages.reverse()
+        passages = Passages.get_all_passages_exc_deleted(limit=limit,
+                                                         offset=(page-1)*limit)
+        count = Passages.count_admin()
+        pagination = Pagination(page, limit, count)
+        return render_template('admin/index.html', site=site, passage_list=passages, pagination=pagination)
     elif Tags.is_avaliable(request.args.get('tag')):
-        passages = Tags.get_passages_by_tag_exc_deleted(request.args.get('tag'), False) 
+        passages = Tags.get_passages_for_list(request.args.get('tag'), False) 
+        return render_template('admin/index.html', site=site, passage_list=passages)
     else:
         abort(404)
-    return render_template('admin/index.html', site=site, passage_list=passages)
 
 
 @admin_module.route('/display_passage', methods=['POST'])

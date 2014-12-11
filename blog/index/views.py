@@ -110,7 +110,7 @@ def archive(page):
     ps = Passages.get_all_passages_for_list(limit=limit,
                                             offset=(page-1)*limit,
                                             kind='all')
-    count = Passages.count()
+    count = Passages.count_display()
     if not ps and page != 1:
         abort(404)
     pagination = Pagination(page, limit, count)
@@ -148,7 +148,7 @@ def passage():
 
 @index_module.route('/about')
 def about():
-    return render_template('/index/about.html',
+    return render_template('index/about.html',
                            my_site_config=_get_config())
 
 @index_module.route('/comment', methods=['POST'])

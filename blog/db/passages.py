@@ -114,11 +114,18 @@ class Passages(db.Model):
         return pid == last_passage.id or last_passage is None
 
     @classmethod
-    def count(cls):
+    def count_display(cls):
         """
         return the sum of passages on show
         """
         return cls.query.filter_by(is_draft=False).count()
+
+    @classmethod
+    def count_admin(cls):
+        """
+        return the sum fo passages for administrator view
+        """
+        return cls.query.filter_by(is_delete=False).count()
 
     @classmethod
     def get_passage_by_id(cls, id):
@@ -126,19 +133,26 @@ class Passages(db.Model):
 
     @classmethod
     def get_all_passages_for_index(cls, limit=5, offset=0):
+        """
+        get passages which are not draft for the homepage
+        """
         return cls._get_limit_passages(limit=limit, offset=offset)
 
 
     @classmethod
     def get_all_passages_for_list(cls, limit=10, offset=0, kind='all'):
+        """
+        get passages which are not draft for list
+        """
         if kind == 'all':
             return cls._get_limit_passages(limit=limit, offset=offset)
         else:
-            return Tags.get_passages_by_tag_exc_deleted(tag=kind)
+            return Tags.get_passages_for_list(tag=kind)
 
     @classmethod
-    def get_all_passages_exc_deleted(cls):
-        return cls.query.filter_by(is_delete=False).order_by(cls.pubdate).all()
+    def get_all_passages_exc_deleted(cls, limit=20, offset=0):
+        return cls.query.filter_by(is_delete=False)\
+            .order_by(cls.pubdate.desc()).offset(offset).limit(limit).all()
 
     @classmethod
     def get_all_passages_deleted(cls):

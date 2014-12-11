@@ -1,3 +1,4 @@
+{%import "module.html" as module%}
 {%extends "index/layout/index.html"%}
 {%block indexHeadScript%}
 <link rel="stylesheet" href="{{url_for('.static', filename='css/categories.css')}}">
@@ -9,7 +10,7 @@
 		<a target="blank" href="{{url_for('.passage')}}?pid={{passage.id}}" class="passage-link">{{passage.title}}</a>
 		<span class="detail text-right">
 			<div>
-				<i class="fa fa-calendar"></i><span class="pubdate">{{passage.pubdate | string | truncate(10, True, end='')}}</span>
+				<i class="fa fa-calendar"></i>{{module.render_time(passage.pubdate)}}
 			</div>
 			<div>
 				<i class="fa fa-tags"></i>
@@ -23,26 +24,7 @@
 
 </div>
 
-{%macro render_pagination(pagination, endpoint)%}
-<div class="bottom-nav text-center">
-	<nav>
-		<ul class="pagination">
-			{%- for page in pagination.iter_pages() %}
-				{%if page%}
-					{%if page != pagination.page%}
-						<li><a href="{{url_for(endpoint, page=page)}}">{{page}}</a></li>
-					{%else%}
-						<li class="active"><a href="#">{{page}}</a></li>
-					{%endif%}
-				{%else%}
-					<li><span class="ellipsis">...</span></li>
-				{%endif%}
-			{%- endfor%}
-		</ul>
-	</nav>
-</div>
-{%endmacro%}
 {%if pagination%}
-	{{render_pagination(pagination, '.archive')}}
+	{{module.render_pagination(pagination, '.archive')}}
 {%endif%}
 {%endblock rightPart%}

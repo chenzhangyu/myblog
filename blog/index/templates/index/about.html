@@ -1,19 +1,11 @@
+{% import "module.html" as module %}
 {%extends "index/layout/index.html"%}
 {%block indexHeadScript%}
 
 {%endblock indexHeadScript%}
 {%block rightPart%}
 
-{%macro render_time(datetime)%}
-	{%if datetime.year == datetime.now().year%}
-		{%set fmt = '%m\u6708%d\u65e5'%}
-	{%else%}
-		{%set fmt = '%Y\u5e74%m\u6708%d\u65e5'%}
-	{%endif%}
-	<span class="render-time">{{datetime.strftime(fmt.encode('utf-8')).decode('utf-8')}}</span>
-{%endmacro%}
-
 <p class="pre-wrap">{{my_site_config['info']['description']}}</p>
-<p>最后更新: {{render_time(my_site_config['info']['pubdate'])}}</p>
+<p>最后更新: {{module.render_time(my_site_config['info']['pubdate'])}}</p>
 
 {%endblock rightPart%}
