@@ -1,3 +1,4 @@
+{%import "module.html" as module%}
 {%extends "index/layout/index.html"%}
 {%block indexHeadScript%}
 	<link rel="stylesheet" href="{{url_for('.static', filename='css/index.css')}}">
@@ -7,7 +8,7 @@
 <div class="article">
 	<p class="article-item pubdate">
 		<i class="fa fa-calendar fa-2x"></i>
- 			<span class="text-warning">{{passage.pubdate.strftime('%Y-%m-%d')}}</span>
+ 			{{module.render_time(passage.pubdate)}}
 	 		<span class="tag-list text-right">
 			<i class="fa fa-tags"></i>
 			{%for tag in passage.tags%}

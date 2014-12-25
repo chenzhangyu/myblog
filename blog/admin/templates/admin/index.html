@@ -1,3 +1,4 @@
+{%import "module.html" as module%}
 {%extends "admin/layout/admin.html"%}
 {% macro get_reports_sum() %}
 	{% if reports %}
@@ -49,7 +50,11 @@
 	    </tbody>
 
 	</table>
+
 {%endblock adminIndexSection%}
+	{%if pagination%}
+		{{module.render_pagination(pagination, '.index')}}
+	{%endif%}
 {%endblock rightCol%}
 {%block footScript%}
 	<script src="{{url_for('.static', filename='js/index.js')}}"></script>

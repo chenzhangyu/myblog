@@ -1,3 +1,4 @@
+{%import "module.html" as module%}
 {%extends "index/layout/index.html"%}
 {%block indexHeadScript%}
 <link rel="stylesheet" href="{{url_for('.static', filename='css/passage.css')}}">
@@ -11,15 +12,6 @@
 {%else%}
 <a href="{{user.profile_url}}" class="text-link">{{user.username}}</a>
 {%endif%}
-{%endmacro%}
-
-{%macro render_time(datetime)%}
-	{%if datetime.year == datetime.now().year%}
-		{%set fmt = '%m\u6708%d\u65e5'%}
-	{%else%}
-		{%set fmt = '%Y\u5e74%m\u6708%d\u65e5'%}
-	{%endif%}
-	<span class="render-time">{{datetime.strftime(fmt.encode('utf-8')).decode('utf-8')}}</span>
 {%endmacro%}
 
 {%macro render_votes(votes)%}
@@ -55,7 +47,7 @@
 				<div id="waitting"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
 			</div>
 
-			<div>Zhangyu Chen@{{render_time(passage.pubdate)}}</div>
+			<div>Zhangyu Chen@{{module.render_time(passage.pubdate)}}</div>
 
 			<div class="passage-link">
 				
@@ -86,7 +78,7 @@
 					<div class="comment-session" cid="{{comment.id}}">
 						{{render_username(comment.user)}}
 						<div class="comment-content">{{comment.content}}</div>
-						<span class="comment-time">{{render_time(comment.pubdate)}}</span>
+						<span class="comment-time">{{module.render_time(comment.pubdate)}}</span>
 						{{admin_view(comment)}}
 					</div>
 				</div>
@@ -100,7 +92,7 @@
 							<div class="comment-session" mode="talk" cid="{{talk.cid}}" tid="{{talk.id}}">
 								{{render_username(talk.f_user)}}&nbsp;回复&nbsp;{{render_username(talk.t_user)}}
 								<div class="comment-content">{{talk.content}}</div>
-								<span class="comment-time">{{render_time(talk.pubdate)}}</span>
+								<span class="comment-time">{{module.render_time(talk.pubdate)}}</span>
 								{{admin_view(talk)}}
 							</div>
 						</div>	

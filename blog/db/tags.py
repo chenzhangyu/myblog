@@ -62,7 +62,7 @@ class Tags(db.Model):
         return result
 
     @classmethod
-    def get_passages_by_tag_exc_deleted(cls, tag, limited=True):
+    def get_passages_for_list(cls, tag, limited=True):
         assert cls.is_avaliable(tag)
         t = cls.get_avaliable_tag(tag)
         # including drafts

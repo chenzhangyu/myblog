@@ -18,6 +18,7 @@ def send_mail(to_addr, subject, content):
     from_addr = info['email']['address']
     password = info['email']['password']
     smtp_server = info['email']['smtp']
+    name = info['site']['name']
 
     msg = MIMEText(content, 'plain', 'utf-8')
     msg['From'] = _format_addr(u'%s <%s>' % (info['site']['name'], from_addr))
@@ -25,7 +26,7 @@ def send_mail(to_addr, subject, content):
     msg['Subject'] = Header(subject, 'utf-8').encode()
 
     server = smtplib.SMTP(smtp_server, 25)
-    server.set_debuglevel(1)
+    # server.set_debuglevel(1)
     server.login(from_addr, password)
     server.sendmail(from_addr, [to_addr], msg.as_string())
     server.quit()

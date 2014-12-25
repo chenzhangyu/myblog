@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from config import info
 
@@ -14,6 +14,10 @@ app.secret_key = r'\xf72.3\xd9\xe6t\xf8\xd9\\\x90\xf1\x9di\x9e\x90\xb7\xe4"\x12Q
 
 from index import index_module
 from admin import admin_module
+
+@app.route('/')
+def redirect_to_index():
+    return redirect(url_for('index_module.index'), code=301)
 
 app.register_blueprint(index_module, url_prefix='/blog')
 app.register_blueprint(admin_module, url_prefix='/admin')
