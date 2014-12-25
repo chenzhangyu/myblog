@@ -13,3 +13,4 @@ blog/index/*.pyc
 .*.swp
 blog/.*.swp
 blog/*/.*.swp
+blog/index/static/img/senery1.jpg

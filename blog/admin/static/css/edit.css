@@ -1,3 +1,8 @@
 #add-tag-btn{
 	margin: 1em;
 }
+#preview-content img{
+	display: block;
+	margin: auto;
+	max-width: 100%;
+}

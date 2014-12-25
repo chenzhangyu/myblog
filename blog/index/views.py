@@ -164,6 +164,11 @@ def comment():
                  uid=session['id'])
     db.session.add(c)
     db.session.commit()
+    root = Users.query.get(1)
+    if site_info['email']['engine'] == 'on' and root.is_activated:
+        url = 'http://' + site_info['site']['url'] + url_for('.passage') + \
+            '?pid=' + str(request.form['pid'])
+        send_reply_mail(root, url)
     return jsonify(status=True)
 
 
@@ -182,11 +187,11 @@ def reply():
                          request.form['cid'],
                          session['id'],
                          c.uid))
+    db.session.commit()
     if site_info['email']['engine'] == 'on' and c.user.is_activated:
         url = 'http://' + site_info['site']['url'] + url_for('.passage') + \
             '?pid=' + str(c.pid)
         send_reply_mail(c.user, url)
-    db.session.commit()
     return jsonify(status=True, refresh=True)
 
 
@@ -205,11 +210,11 @@ def talk():
                          t.cid,
                          session['id'],
                          t.f_uid))
+    db.session.commit()
     if site_info['email']['engine'] == 'on' and t.f_user.is_activated:
         url = 'http://' + site_info['site']['url'] + url_for('.passage') + \
             '?pid=' + str(t.pid)
         send_reply_mail(t.f_user, url)
-    db.session.commit()
     return jsonify(status=True, refresh=True)
 
 

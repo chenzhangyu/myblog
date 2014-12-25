@@ -20,7 +20,7 @@ def send_mail(to_addr, subject, content):
     smtp_server = info['email']['smtp']
 
     msg = MIMEText(content, 'plain', 'utf-8')
-    msg['From'] = _format_addr(u'%s <%s>' % ('name', from_addr))
+    msg['From'] = _format_addr(u'%s <%s>' % (info['site']['name'], from_addr))
     msg['To'] = _format_addr(u'to <%s>' % to_addr)
     msg['Subject'] = Header(subject, 'utf-8').encode()
 

@@ -19,7 +19,15 @@
 	    <tbody>
 	    	{%for passage in passage_list | default([])%}
 	        <tr>
-	            <td><a href="{{url_for('index_module.passage')}}?pid={{passage.id}}" class="text-link">{{passage.title}}</a></td>
+	            <td>
+	            	{% if passage.is_draft %}
+	            		<span title="尚在编辑状态">{{passage.title}}</span>
+	            	{% else %}
+		            	<a href="{{url_for('index_module.passage')}}?pid={{passage.id}}" class="text-link">
+		            		{{passage.title}}
+		            	</a>
+		            {% endif %}
+		            </td>
 	            <td><span class="glyphicon glyphicon-tags"></span>
 					{%for tag in passage.tags | default([])%}
 					<a class="text-link" href="{{url_for('.index')+'?tag='+tag.tag}}">{{tag.tag}}</a>

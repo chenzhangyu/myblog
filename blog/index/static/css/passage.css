@@ -112,3 +112,8 @@ button#comment{
 	background-color: #ffffff;
 	border: 1px;
 }
+#passage-content img{
+	display: block;
+	margin: auto;
+	max-width: 100%;
+}
