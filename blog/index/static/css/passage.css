@@ -49,6 +49,7 @@ a.noul:hover{
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
 	resize: none;
+	outline: none;
 }
 #commet-btn{
 	float: right;

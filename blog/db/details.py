@@ -1,21 +1,15 @@
 from . import db
-import time
 from datetime import datetime
 
 class Details(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
-    keywords = db.Column(db.String(80))
-    summary = db.Column(db.String(50))
     description = db.Column(db.Text)
-    pubdate = db.Column(db.DateTime)
+    pubdate = db.Column(db.DateTime, 
+                        default=datetime.now, 
+                        onupdate=datetime.now)
 
-    def __init__(self, title, keywords, summary, description):
-        self.title = title
-        self.keywords = keywords
-        self.summary = summary
+    def __init__(self, description):
         self.description = description
-        self.pubdate = time.strftime('%Y-%m-%d %H:%M:%S')
 
     @classmethod
     def is_default(cls):
@@ -31,21 +25,16 @@ class Details(db.Model):
         """
         info = cls.query.get(1)
         if info is None:
-            info = {'title': 'title',
-                    'keywords': 'keywords',
-                    'summary': 'summary',
-                    'description': 'description',
-                    'pubdate': datetime.now()}
-        return info
+            config = {'description': 'description',
+                      'pubdate': datetime.now()}
+        else:
+            config = {'description': info.description,
+                      'pubdate': info.pubdate}
+        return config
 
     @classmethod
-    def update_info(cls, title='title', keywords='keywords', summary='summary',
-                    description='description'):
+    def update_info(cls, description='description'):
         assert not cls.is_default()
         d = cls.query.get(1)
-        d.title = title
-        d.keywords = keywords
-        d.summary = summary
         d.description = description
-        d.pubdate = time.strftime('%Y-%m-%d %H:%M:%S')
         return

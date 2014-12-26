@@ -9,15 +9,17 @@
 		"engine": "on",
 		"address": "18202788138@163.com",
 		"smtp": "smtp.163.com",
-		"password": "password"
+		"password": "html089css"
 	},
 	"SinaAPI": {
-		"APP_KEY": "APP_KEY",
-		"APP_SECRET": "APP_SECRET",
+		"APP_KEY": "2858452607",
+		"APP_SECRET": "307003f29a4ed1d6656ed81c01f2db9d",
 		"CALLBACK_URI": "http://127.0.0.1:5000/blog/response/login"
 	},
 	"site": {
 		"url": "127.0.0.1:5000",
-		"name": "陈章玉的博客"
+		"name": "陈章玉的博客",
+		"keywords": "web backend python",
+		"summary": "年轻就该多做点事"
 	}
 }

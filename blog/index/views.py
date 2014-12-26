@@ -19,7 +19,13 @@ def _get_referer():
     return session['Referer'] if 'Referer' in session else url_for('.index')
 
 def _get_config():
-    return {'info':Details.get_info(), 
+    temp = {'title': site_info['site']['name'],
+            'summary': site_info['site']['summary'],
+            'kwywords': site_info['site']['keywords']}
+    config_in_db = Details.get_info()
+    for key in config_in_db:
+        temp[key] = config_in_db[key]
+    return {'info': temp,
             'friends':Friends.get_all_friends_exc_deleted()}
 
 def _test_for_int(value):

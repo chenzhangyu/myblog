@@ -1,13 +1,16 @@
 from . import db
 from . import Tags
 from . import pas_tag
-import time
+from datetime import datetime
 
 class Passages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     content = db.Column(db.Text)
-    pubdate = db.Column(db.DateTime)
+    pubdate = db.Column(db.DateTime, default=datetime.now)
+    last_modified = db.Column(db.DateTime, 
+                              default=datetime.now,
+                              onupdate=datetime.now)
     visits = db.Column(db.Integer, default=0)
     description = db.Column(db.Text)
     is_delete = db.Column(db.Boolean, default=False)
@@ -23,11 +26,11 @@ class Passages(db.Model):
     comments = db.relationship("Comments", backref="passage", 
             lazy="dynamic", passive_deletes=True)
 
-    def __init__(self, title, content, description):
+    def __init__(self, title, content, description, init_time=None):
         self.title = title
         self.content = content
         self.description = description
-        self.pubdate = time.strftime('%Y-%m-%d %H:%M:%S')
+        self.pubdate = init_time
 
 
     def set_tags(self, tag_list):
@@ -59,7 +62,6 @@ class Passages(db.Model):
         self.title = title
         self.content = content
         self.description = description
-        self.pubdate = time.strftime("%Y-%m-%d %H:%M:%S")
         return
 
     @property
@@ -152,7 +154,8 @@ class Passages(db.Model):
     @classmethod
     def get_all_passages_exc_deleted(cls, limit=20, offset=0):
         return cls.query.filter_by(is_delete=False)\
-            .order_by(cls.pubdate.desc()).offset(offset).limit(limit).all()
+            .order_by(cls.last_modified.desc()).offset(offset)\
+            .limit(limit).all()
 
     @classmethod
     def get_all_passages_deleted(cls):

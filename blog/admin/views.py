@@ -235,21 +235,15 @@ def update_tag():
 @admin_module.route('/update_config', methods=['POST'])
 @admin_session
 def update_config():
-    _info = ['title', 'summary', 'keywords', 'description']
+    _info = ['description']
     for x in _info:
         if x not in request.form or not request.form[x]:
             abort(400)
     if Details.is_default():
-        d = Details(title=request.form['title'],
-                    keywords=request.form['keywords'],
-                    summary=request.form['summary'],
-                    description=request.form['description'])
+        d = Details(description=request.form['description'])
         db.session.add(d)
     else:
-        Details.update_info(title=request.form['title'],
-                        keywords=request.form['keywords'],
-                        summary=request.form['summary'],
-                        description=request.form['description'])
+        Details.update_info(description=request.form['description'])
     db.session.commit()
     return redirect(url_for('.config'))
 
