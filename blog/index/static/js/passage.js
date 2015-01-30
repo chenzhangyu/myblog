@@ -3,7 +3,13 @@ function qs(key) {
     var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 }
+
+function set_emoji(){
+	$('#emoji').css('top', (-$('#emoji').height()-5)+'px');
+}
 $(document).ready(function(){
+	set_emoji();
+
 	$.ajax({
 		url: '/blog/get_content',
 		type: 'post',
@@ -160,5 +166,25 @@ $(document).ready(function(){
 		}).fail(function(){
 			alert('fail to operate!');
 		});
+	});
+
+	$('.fa-smile-o').click(function(){
+		if ($('#emoji').css('display') === 'none') {
+			$('#emoji').css('display', 'inline-block');
+		}else{
+			$('#emoji').css('display', 'none');
+		}
+	});
+
+	$('#emoji-list span').click(function(){
+		var comment = $('#comment-input');
+		var start = comment.prop('selectionStart');
+		var end = comment.prop('selectionEnd');
+		var content = comment.val();
+		comment.val(content.substring(0, start)+$(this).text()+content.substring(end, content.length));
+		$('#emoji').css('display', 'none');
+		comment.focus();
+		var pos = $(this).text().length + end;
+		comment[0].setSelectionRange(pos, pos);
 	});
 });
