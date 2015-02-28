@@ -59,7 +59,7 @@ def online_session(func):
     @functools.wraps(func)
     def wrapper(*args, **kw):
         if 'id' not in session:
-            return redirect(url_for('index_module.index'))
+            return jsonify(status=False)
         return func(*args, **kw)
     return wrapper
 

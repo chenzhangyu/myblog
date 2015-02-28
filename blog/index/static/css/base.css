@@ -9,11 +9,6 @@ body{
 #body-container{
 	position: relative;
 }
-div#calculator{
-	position: absolute;
-	left: 0px;
-	bottom: 0px;
-}
 body{
 	background-image: url("../../static/img/bg.png");
 }

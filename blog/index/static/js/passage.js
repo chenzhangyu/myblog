@@ -26,8 +26,8 @@ $(document).ready(function(){
 		}
 	});
 	$('#comment').click(function(){
-		var conten = $('#comment-input').val();
-		if (!conten) {
+		var content = $('#comment-input').val();
+		if (!content) {
 			alert('不能留空( ⊙ o ⊙ )啊！');
 			return;
 		}
@@ -37,7 +37,7 @@ $(document).ready(function(){
 			dataType: 'json',
 			data: {
 				pid: qs('pid'),
-				comment: conten
+				comment: content
 			}
 		}).done(function(data){
 			if (data.status === true) {
@@ -102,7 +102,7 @@ $(document).ready(function(){
 					}					
 				}
 			}else{
-				alert('fail to operate!');
+				alert('请先微博账号登录!');
 			}
 		})
 	});
@@ -162,6 +162,9 @@ $(document).ready(function(){
 				} else {
 					$('#reply-dialog').modal('hide');
 				};
+			} else {
+				$('#reply-dialog').modal('hide');
+				alert('请先微博账号登录!');
 			}
 		}).fail(function(){
 			alert('fail to operate!');
@@ -184,7 +187,7 @@ $(document).ready(function(){
 		comment.val(content.substring(0, start)+$(this).text()+content.substring(end, content.length));
 		$('#emoji').css('display', 'none');
 		comment.focus();
-		var pos = $(this).text().length + end;
+		var pos = $(this).text().length + start;
 		comment[0].setSelectionRange(pos, pos);
 	});
 });

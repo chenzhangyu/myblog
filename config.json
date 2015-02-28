@@ -18,8 +18,10 @@
 	},
 	"site": {
 		"url": "127.0.0.1:5000",
+		"port": 5000,
 		"name": "陈章玉的博客",
 		"keywords": "web backend python",
-		"summary": "年轻就该多做点事"
+		"summary": "年轻就该多做点事",
+		"log_path": "blog/log/flask.log"
 	}
 }
