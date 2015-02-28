@@ -1,27 +1,29 @@
 {
 	"SQL": {
 		"type": "mysql",
-		"user": "limit",
-		"password": "testforlimit",
-		"database": "test"
+		"user": "user",
+		"password": "password",
+		"database": "database"
 	},
 	"email": {
 		"engine": "on",
-		"address": "18202788138@163.com",
-		"smtp": "smtp.163.com",
-		"password": "html089css"
+		"address": "address",
+		"smtp": "smtp_server",
+		"password": "password"
 	},
 	"SinaAPI": {
-		"APP_KEY": "2858452607",
-		"APP_SECRET": "307003f29a4ed1d6656ed81c01f2db9d",
-		"CALLBACK_URI": "http://127.0.0.1:5000/blog/response/login"
+		"APP_KEY": "APP_KEY",
+		"APP_SECRET": "APP_SECRET",
+		"CALLBACK_URI": "CALLBACK_URI"
 	},
 	"site": {
-		"url": "127.0.0.1:5000",
+		"url": "url",
 		"port": 5000,
-		"name": "陈章玉的博客",
-		"keywords": "web backend python",
-		"summary": "年轻就该多做点事",
-		"log_path": "blog/log/flask.log"
+		"name": "name",
+		"keywords": "keywords",
+		"summary": "summary",
+		"log_path": "blog/log/flask.log",
+		"key": "random_key",
+		"serializer": "random_serializer"
 	}
 }

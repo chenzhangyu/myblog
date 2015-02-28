@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
         infoSql['type'] + '://' + infoSql['user'] + ':' + \
         infoSql['password'] + '@localhost/' + infoSql['database']
 
-app.secret_key = r'\xf72.3\xd9\xe6t\xf8\xd9\\\x90\xf1\x9di\x9e\x90\xb7\xe4"\x12Q\x9d\nB'
+app.secret_key = info['site']['key']
 
 
 from index import index_module

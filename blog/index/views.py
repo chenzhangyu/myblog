@@ -64,7 +64,7 @@ def online_session(func):
     return wrapper
 
 def get_serializer():
-    return URLSafeSerializer(r'\xf72.3\xd9\xe6t\xf8\xd9\\\x90\xf1\x9di\x9e\x90\xb7\xe4"\x12Q\x9d\nB')
+    return URLSafeSerializer(site_info['site']['serializer'])
 
 def get_activation_link(user):
     s = get_serializer()
